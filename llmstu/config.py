@@ -39,7 +39,8 @@ class CaptionConfig:
     load_in_4bit: bool = False           # bitsandbytes 4-bit (fits 27B on a 40GB A100)
     attn_implementation: str = "sdpa"    # sdpa | flash_attention_2 | eager
     prompt_name: str = "v1_structured"   # key in llmstu/prompts.PROMPTS
-    max_new_tokens: int = 384
+    enable_thinking: bool = False        # False = tell Qwen to skip <think> and emit JSON directly
+    max_new_tokens: int = 512
     batch_size: int = 8                  # transformers micro-batch
     max_pixels: int = 768 * 28 * 28      # cap visual tokens per crop for speed
     temperature: float = 0.0

@@ -29,8 +29,13 @@ def build_prompt(name: str = "v1_structured") -> str:
     return prompts.get(name)
 
 
+_THINK_RE = re.compile(r"<think>.*?</think>", re.DOTALL | re.IGNORECASE)
+
+
 def _parse(text: str) -> Dict:
-    m = _JSON_RE.search(text or "")
+    # drop any <think>...</think> reasoning so it can't swallow the JSON braces
+    text = _THINK_RE.sub("", text or "")
+    m = _JSON_RE.search(text)
     if not m:
         return schema.coerce({})
     try:
@@ -91,6 +96,7 @@ class TransformersCaptioner:
         inputs = self.processor.apply_chat_template(
             batch_msgs, tokenize=True, add_generation_prompt=True,
             return_dict=True, return_tensors="pt", padding=True,
+            enable_thinking=self.cfg.enable_thinking,
         ).to(self.model.device)
         with torch.inference_mode():
             gen = self.model.generate(
@@ -135,7 +141,8 @@ class VLLMCaptioner:
                 {"type": "image", "image": im},
                 {"type": "text", "text": self.prompt}]}]
             text = self.processor.apply_chat_template(
-                messages, tokenize=False, add_generation_prompt=True)
+                messages, tokenize=False, add_generation_prompt=True,
+                enable_thinking=self.cfg.enable_thinking)
             reqs.append({"prompt": text, "multi_modal_data": {"image": im}})
         outs = self.llm.generate(reqs, self.sampling)
         packed = []
