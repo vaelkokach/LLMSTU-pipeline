@@ -160,6 +160,9 @@ SCHEMAS: Dict[str, Dict[str, Dict[str, Any]]] = {
     "full": FIELDS,
     "no_attention_target": _drop(FIELDS, "attention_target"),   # drop redundant field
     "gaze_merged": {**FIELDS, "gaze_direction": _GAZE_MERGED},   # fewer gaze categories
+    # drop attention_target AND merge gaze categories (keeps everything else)
+    "no_attn_gaze_merged": _drop({**FIELDS, "gaze_direction": _GAZE_MERGED},
+                                 "attention_target"),
     "lean": _drop({**FIELDS, "gaze_direction": _GAZE_MERGED},
                   "attention_target", "occluded"),               # trimmed engagement set
 }
