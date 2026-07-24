@@ -45,6 +45,41 @@ def contact_sheet(variants: List[Dict], out_html: Path) -> Path:
     return out_html
 
 
+def schema_report(variants: List[Dict], out_html: Path) -> Path:
+    """variants: [{name, schema, n_fields, coverage:[{field,pct}], mean_conf}].
+
+    coverage = % of crops where the model gave a CONCRETE (non-"unknown") answer for
+    an enum field. Higher = the model can actually decide that field under this schema.
+    """
+    parts = [f"<style>{_CSS}</style>", "<h1>Schema tuning — field-set comparison</h1>",
+             "<div class='meta'>Per enum field: % of crops answered concretely "
+             "(not \"unknown\"). A field that's mostly \"unknown\" is ambiguous under "
+             "this schema — consider dropping it or merging its categories. Confirm "
+             "correctness on the golden set later; this measures decidability.</div>"]
+    parts.append("<table><tr><th>variant</th><th>schema</th><th># fields</th>"
+                 "<th>mean concrete-rate</th><th>mean confidence</th></tr>")
+    for v in variants:
+        cov = v["coverage"]
+        mean_cov = sum(c["pct"] for c in cov) / max(1, len(cov))
+        parts.append(f"<tr><td>{html.escape(v['name'])}</td>"
+                     f"<td class='k'>{html.escape(v['schema'])}</td>"
+                     f"<td>{v['n_fields']}</td><td>{mean_cov:.0f}%</td>"
+                     f"<td>{v.get('mean_conf', 0)*100:.0f}%</td></tr>")
+    parts.append("</table>")
+    for v in variants:
+        parts.append(f"<h2>{html.escape(v['name'])} "
+                     f"<span class='pill'>{html.escape(v['schema'])}</span></h2>")
+        parts.append("<table><tr><th>field</th><th>concrete-rate</th></tr>")
+        for c in v["coverage"]:
+            cls = " class='diff'" if c["pct"] < 50 else ""
+            parts.append(f"<tr><td class='k'>{html.escape(c['field'])}</td>"
+                         f"<td{cls}>{c['pct']:.0f}%</td></tr>")
+        parts.append("</table>")
+    out_html = Path(out_html)
+    out_html.write_text("\n".join(parts))
+    return out_html
+
+
 def golden_report(scores: List[Dict], disagreements: Dict[str, List[Dict]],
                   meta: Dict, out_html: Path) -> Path:
     """scores: [{field, accuracy, n}]; disagreements: {field:[{crop, pseudo, golden}]}."""

@@ -104,6 +104,20 @@ Structured, engagement/attention focused (full definition in `llmstu/schema.py`)
 Prompt variants live in `llmstu/prompts.py` (`v1_structured`, `v2_concise`,
 `v3_reasoned`, `v4_fewshot`); add your own and reference it by name.
 
+**Two separate tuning axes.** The *fields themselves* are your design in
+`llmstu/schema.py` — Qwen only fills values, it never chooses fields. So schema
+(which fields/categories exist) and prompt wording are different knobs:
+
+- `scripts/06_tune_captions.py` — A/B prompt **wording** (fields held constant).
+- `scripts/08_tune_schema.py` — A/B **field sets** (`schema.SCHEMAS`: `full`,
+  `no_attention_target`, `gaze_merged`, `lean`), reporting each enum field's
+  "concrete-rate" (how often the model answered something other than `unknown`).
+  Low-agreement fields from wording tuning (e.g. `gaze_direction`,
+  `attention_target`) are the ones to test here. Set the winner via
+  `caption.schema_name` in `config.yaml`.
+
+Decide the schema first, then tune wording under it.
+
 ## Model: Qwen3.5 (runs on the GPU, not an API)
 
 `caption.model_id` defaults to `Qwen/Qwen3.5-27B`. Qwen3.5 is natively multimodal, so

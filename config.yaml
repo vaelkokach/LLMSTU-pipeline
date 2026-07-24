@@ -6,13 +6,13 @@ crop:
   conf: 0.35
   iou: 0.6
   imgsz: 1280                  # frames are wide-angle rooms; keep this high
-  crop_mode: head_wide         # head_wide | upper_body | person
+  crop_mode: upper_body         # head_wide | upper_body | person
   head_frac: 0.55              # top fraction of the person box kept as head+shoulders
-  margin_frac: 0.35            # context padding around the face crop
+  margin_frac: 0.25            # context padding around the face crop
   min_side_px: 48              # drop tiny/far students
   max_per_frame: 60
   out_size: 512                # bigger crops = more facial detail (VRAM/compute to spare)
-
+#mode=upper_body head_frac=0.55 margin=0.25 det=yolo11l.pt conf=0.35  ·  90 crops from 8 frames (avg 11.2/frame)
 caption:
   # Tuned for a single ~95GB GPU (H100 NVL / GH200 class).
   # Qwen3.5 = natively multimodal; weights run ON the GPU (no inference API).
@@ -42,3 +42,10 @@ eval:
   n_samples: 500
   stratify_by: engagement_level
   seed: 13
+
+
+#tight_head
+#mode=head_wide head_frac=0.45 margin=0.2 det=yolo11l.pt conf=0.35  ·  88 crops from 8 frames (avg 11.0/frame)
+
+#upper_body # startin with this one
+#mode=upper_body head_frac=0.55 margin=0.25 det=yolo11l.pt conf=0.35  ·  90 crops from 8 frames (avg 11.2/frame)

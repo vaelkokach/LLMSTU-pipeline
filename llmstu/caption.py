@@ -61,6 +61,7 @@ class TransformersCaptioner:
 
         self.cfg = cfg
         self.torch = torch
+        schema.set_active(cfg.schema_name)   # select the field set before building the prompt
         dtype = getattr(torch, cfg.dtype)
         # Fall back to sdpa if flash-attn is requested but not installed, so the run
         # never hard-crashes on a missing optional dependency.
@@ -124,6 +125,7 @@ class VLLMCaptioner:
         from transformers import AutoProcessor
 
         self.cfg = cfg
+        schema.set_active(cfg.schema_name)   # select the field set before building the prompt
         self.processor = AutoProcessor.from_pretrained(cfg.model_id, max_pixels=cfg.max_pixels)
         self.llm = LLM(model=cfg.model_id, trust_remote_code=True,
                        limit_mm_per_prompt={"image": 1},

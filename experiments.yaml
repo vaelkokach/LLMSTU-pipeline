@@ -45,3 +45,22 @@ caption_variants:
     model_id: Qwen/Qwen3.5-27B
     prompt_name: v4_fewshot
     load_in_4bit: false
+
+# A/B different FIELD SETS (schema.SCHEMAS keys). Same model/prompt across them so
+# you compare the schema, not the wording. Run: python scripts/08_tune_schema.py
+schema_variants:
+  - name: s_full
+    schema: full
+    model_id: Qwen/Qwen3.5-27B
+    prompt_name: v1_structured
+    load_in_4bit: false
+  - name: s_no_attention
+    schema: no_attention_target
+    model_id: Qwen/Qwen3.5-27B
+    prompt_name: v1_structured
+    load_in_4bit: false
+  - name: s_gaze_merged
+    schema: gaze_merged
+    model_id: Qwen/Qwen3.5-27B
+    prompt_name: v1_structured
+    load_in_4bit: false

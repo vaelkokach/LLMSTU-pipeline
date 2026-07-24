@@ -137,3 +137,37 @@ def prompt_spec() -> str:
             lines.append(f'- "{name}": short string  # {spec["help"]}')
     lines.append(f'- "{MODEL_CONFIDENCE_FIELD}": number 0.0-1.0  # your confidence in this reading')
     return "\n".join(lines)
+
+
+# --------------------------------------------------------------------------- #
+# Schema VARIANTS — A/B different field sets (see scripts/08_tune_schema.py).
+# `FIELDS` above is the "full" schema and the live/active one. set_active() swaps
+# it, so prompt_spec()/coerce()/empty_label() and everything that reads
+# schema.FIELDS follow the chosen variant.
+# --------------------------------------------------------------------------- #
+def _drop(base: Dict[str, Dict[str, Any]], *names: str) -> Dict[str, Dict[str, Any]]:
+    return {k: v for k, v in base.items() if k not in names}
+
+
+# gaze with fewer, less-overlapping categories (8 -> 6) to lift reliability
+_GAZE_MERGED = {
+    "type": "enum",
+    "values": ["teacher_or_board", "own_work", "peer", "device", "away", "unknown"],
+    "help": "Where the student is looking (merged categories).",
+}
+
+SCHEMAS: Dict[str, Dict[str, Dict[str, Any]]] = {
+    "full": FIELDS,
+    "no_attention_target": _drop(FIELDS, "attention_target"),   # drop redundant field
+    "gaze_merged": {**FIELDS, "gaze_direction": _GAZE_MERGED},   # fewer gaze categories
+    "lean": _drop({**FIELDS, "gaze_direction": _GAZE_MERGED},
+                  "attention_target", "occluded"),               # trimmed engagement set
+}
+
+
+def set_active(name: str) -> None:
+    """Make schema variant `name` the live schema (mutates module-level FIELDS)."""
+    global FIELDS
+    if name not in SCHEMAS:
+        raise KeyError(f"unknown schema '{name}'. choices: {list(SCHEMAS)}")
+    FIELDS = SCHEMAS[name]
