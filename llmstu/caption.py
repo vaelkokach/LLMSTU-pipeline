@@ -57,8 +57,16 @@ class TransformersCaptioner:
         self.cfg = cfg
         self.torch = torch
         dtype = getattr(torch, cfg.dtype)
-        kwargs = dict(dtype=dtype, device_map="auto",
-                      attn_implementation=cfg.attn_implementation)
+        # Fall back to sdpa if flash-attn is requested but not installed, so the run
+        # never hard-crashes on a missing optional dependency.
+        attn = cfg.attn_implementation
+        if attn == "flash_attention_2":
+            try:
+                import flash_attn  # noqa: F401
+            except Exception:
+                print("[caption] flash-attn not installed; falling back to attn_implementation='sdpa'")
+                attn = "sdpa"
+        kwargs = dict(dtype=dtype, device_map="auto", attn_implementation=attn)
         if cfg.load_in_4bit:
             from transformers import BitsAndBytesConfig
             kwargs["quantization_config"] = BitsAndBytesConfig(
