@@ -1,0 +1,9 @@
+work/
+*.pt
+__pycache__/
+*.pyc
+labeling/images/
+labeling/data.json
+labeling/golden.json
+.ipynb_checkpoints/
+.DS_Store

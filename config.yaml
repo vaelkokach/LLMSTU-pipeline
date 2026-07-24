@@ -1,0 +1,43 @@
+# LLMSTU enhancement pipeline config.
+# Every value here can also be overridden with env vars (see llmstu/config.py).
+
+crop:
+  detector_model: yolo11l.pt   # big card -> larger detector for better recall
+  conf: 0.35
+  iou: 0.6
+  imgsz: 1280                  # frames are wide-angle rooms; keep this high
+  crop_mode: head_wide         # head_wide | upper_body | person
+  head_frac: 0.55              # top fraction of the person box kept as head+shoulders
+  margin_frac: 0.35            # context padding around the face crop
+  min_side_px: 48              # drop tiny/far students
+  max_per_frame: 60
+  out_size: 512                # bigger crops = more facial detail (VRAM/compute to spare)
+
+caption:
+  # Tuned for a single ~95GB GPU (H100 NVL / GH200 class).
+  # Qwen3.5 = natively multimodal; weights run ON the GPU (no inference API).
+  # 27B in bf16 ~= 54GB, leaving ~40GB for big batches -> NO 4-bit needed.
+  model_id: Qwen/Qwen3.5-27B
+  backend: transformers          # transformers (simple) | vllm (fastest full run)
+  dtype: bfloat16
+  load_in_4bit: false            # keep false on 95GB: full bf16 is higher quality + faster
+  attn_implementation: flash_attention_2   # big card: use flash-attn (fallback: sdpa)
+  prompt_name: v1_structured     # v1_structured | v2_concise | v3_reasoned | v4_fewshot
+  max_new_tokens: 256            # labels are short JSON; don't overspend
+  batch_size: 32                 # ~40GB headroom; push toward 48-64 while watching nvidia-smi
+  max_pixels: 802816             # = 1024*28*28; >512px crop area, so 512 crops stay full
+  temperature: 0.0
+  vllm_gpu_mem_util: 0.92        # let vLLM use most of the 95GB
+  vllm_max_num_seqs: 128         # high concurrency on a big card
+
+data:
+  source_repo: WaelK/LLMSTU
+  source_subdir: frames
+  crops_repo: WaelK/LLMSTU-crops
+  workdir: ./work
+  frames_glob: "**/*.jpg"
+
+eval:
+  n_samples: 500
+  stratify_by: engagement_level
+  seed: 13
