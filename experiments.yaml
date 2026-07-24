@@ -27,20 +27,21 @@ crop_variants:
     conf: 0.30
 
 caption_variants:
-  # Compare prompt wording (same model). Use a SMALL model here while iterating.
+  # Compare prompt wording (same model). load_in_4bit: false to MATCH the 95GB
+  # bf16 production config -> tuning labels reflect what the final run will produce.
   - name: p_structured
     model_id: Qwen/Qwen3.5-27B
     prompt_name: v1_structured
-    load_in_4bit: true
+    load_in_4bit: false
   - name: p_concise
     model_id: Qwen/Qwen3.5-27B
     prompt_name: v2_concise
-    load_in_4bit: true
+    load_in_4bit: false
   - name: p_reasoned
     model_id: Qwen/Qwen3.5-27B
     prompt_name: v3_reasoned
-    load_in_4bit: true
+    load_in_4bit: false
   - name: p_fewshot
     model_id: Qwen/Qwen3.5-27B
     prompt_name: v4_fewshot
-    load_in_4bit: true
+    load_in_4bit: false
