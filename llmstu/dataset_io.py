@@ -32,6 +32,29 @@ def download_frames(repo_id: str, subdir: str, dest: Path,
     return Path(local) / subdir
 
 
+def download_frame_sample(repo_id: str, subdir: str, dest: Path, n: int = 40,
+                          token: Optional[str] = None,
+                          shard: str = "shard_000") -> Path:
+    """Download only the first `n` frames from one shard (seconds, not minutes).
+
+    Ideal for tuning: pulls ~n individual files via hf_hub_download instead of the
+    whole 5000-file shard. Returns the frames root (dest/subdir) for iter_frames.
+    """
+    from huggingface_hub import HfApi, hf_hub_download
+
+    api = HfApi(token=token)
+    files = api.list_repo_files(repo_id, repo_type="dataset")
+    prefix = f"{subdir}/{shard}/"
+    sel = [f for f in files
+           if f.startswith(prefix) and f.lower().endswith((".jpg", ".jpeg", ".png"))][:n]
+    dest = Path(dest); dest.mkdir(parents=True, exist_ok=True)
+    for f in sel:
+        hf_hub_download(repo_id, filename=f, repo_type="dataset",
+                        token=token, local_dir=str(dest))
+    print(f"[io] sampled {len(sel)} frames from {shard} -> {dest/subdir}")
+    return dest / subdir
+
+
 def iter_frames(frames_dir: Path, pattern: str = "**/*.jpg") -> Iterator[Path]:
     yield from sorted(Path(frames_dir).glob(pattern))
 
