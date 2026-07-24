@@ -34,24 +34,36 @@ def download_frames(repo_id: str, subdir: str, dest: Path,
 
 def download_frame_sample(repo_id: str, subdir: str, dest: Path, n: int = 40,
                           token: Optional[str] = None,
-                          shard: str = "shard_000") -> Path:
-    """Download only the first `n` frames from one shard (seconds, not minutes).
+                          shard: Optional[str] = None,
+                          seed: Optional[int] = 0) -> Path:
+    """Download `n` frames sampled at RANDOM (seconds, not minutes).
 
     Ideal for tuning: pulls ~n individual files via hf_hub_download instead of the
-    whole 5000-file shard. Returns the frames root (dest/subdir) for iter_frames.
+    whole 5000-file shard.
+      shard: a shard name (e.g. "shard_000") to sample within it, or None to sample
+             across ALL shards (more variety — recommended for tuning).
+      seed:  int for a reproducible random sample; None = take the first n (no shuffle).
+    Returns the frames root (dest/subdir) for iter_frames.
     """
+    import random
     from huggingface_hub import HfApi, hf_hub_download
 
     api = HfApi(token=token)
     files = api.list_repo_files(repo_id, repo_type="dataset")
-    prefix = f"{subdir}/{shard}/"
-    sel = [f for f in files
-           if f.startswith(prefix) and f.lower().endswith((".jpg", ".jpeg", ".png"))][:n]
+    prefix = f"{subdir}/{shard}/" if shard else f"{subdir}/"
+    pool = [f for f in files
+            if f.startswith(prefix) and f.lower().endswith((".jpg", ".jpeg", ".png"))]
+    if seed is not None:
+        random.seed(seed)
+        sel = random.sample(pool, min(n, len(pool)))
+    else:
+        sel = pool[:n]
     dest = Path(dest); dest.mkdir(parents=True, exist_ok=True)
     for f in sel:
         hf_hub_download(repo_id, filename=f, repo_type="dataset",
                         token=token, local_dir=str(dest))
-    print(f"[io] sampled {len(sel)} frames from {shard} -> {dest/subdir}")
+    where = shard or "all shards"
+    print(f"[io] sampled {len(sel)} frames from {where} (seed={seed}) -> {dest/subdir}")
     return dest / subdir
 
 
