@@ -45,6 +45,34 @@ def contact_sheet(variants: List[Dict], out_html: Path) -> Path:
     return out_html
 
 
+def golden_report(scores: List[Dict], disagreements: Dict[str, List[Dict]],
+                  meta: Dict, out_html: Path) -> Path:
+    """scores: [{field, accuracy, n}]; disagreements: {field:[{crop, pseudo, golden}]}."""
+    parts = [f"<style>{_CSS}</style>", "<h1>Pseudo-labels vs golden — accuracy</h1>",
+             f"<div class='meta'>{html.escape(str(meta.get('n_reviewed',0)))} human-reviewed "
+             f"crops · overall macro-accuracy "
+             f"<b>{meta.get('overall',0)*100:.1f}%</b></div>"]
+    parts.append("<table><tr><th>field</th><th>accuracy</th><th>n</th></tr>")
+    for s in scores:
+        pct = s["accuracy"] * 100
+        parts.append(f"<tr><td class='k'>{html.escape(s['field'])}</td>"
+                     f"<td>{pct:.0f}%</td><td>{s['n']}</td></tr>")
+    parts.append("</table>")
+    for field, rows in disagreements.items():
+        if not rows:
+            continue
+        parts.append(f"<h2>{html.escape(field)} — disagreements (pseudo → golden)</h2>")
+        parts.append("<table><tr><th>crop</th><th>pseudo</th><th>golden</th></tr>")
+        for r in rows[:20]:
+            parts.append(f"<tr><td class='k'>{html.escape(str(r['crop']))}</td>"
+                         f"<td class='diff'>{html.escape(str(r['pseudo']))}</td>"
+                         f"<td>{html.escape(str(r['golden']))}</td></tr>")
+        parts.append("</table>")
+    out_html = Path(out_html)
+    out_html.write_text("\n".join(parts))
+    return out_html
+
+
 def caption_comparison(crops: List[Dict], variant_names: List[str],
                        fields: List[str], out_html: Path) -> Path:
     """crops: [{image:Path, labels:{variant_name:{field:val}}}]  -> side-by-side table."""

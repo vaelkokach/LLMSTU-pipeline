@@ -32,15 +32,30 @@ export HF_TOKEN=hf_xxx                      # write token
 # 1) detect + crop students  (downloads frames from HF if --frames omitted)
 python scripts/01_crop.py --out ./work/crops
 
-# 2) pseudo-label crops with Qwen3-VL
+# 2) pseudo-label crops with Qwen3.5
 python scripts/02_caption.py --crops ./work/crops --out ./work/pseudo_labels.jsonl
 
 # 3) build the golden-eval sample + labeling payload
 python scripts/03_sample_eval.py --labels ./work/pseudo_labels.jsonl --crops ./work/crops --n 500 --embed
 
-# 4) (after hand-labeling) package + push to a new dataset repo
+# 4) score the pseudo-labels against your hand-corrected golden.json
+python scripts/07_eval_golden.py --golden labeling/golden.json
+
+# 5) package + push crops (sharded) + captions + golden set to a new dataset repo
 python scripts/04_upload.py --repo WaelK/LLMSTU-crops
 ```
+
+**Tip — validate before the full run:** caption just 1–2 shards, hand-label ~200
+crops, and score them first. See `docs/EARLY_GOLDEN_CHECK.md`.
+
+### What gets uploaded (step 5)
+
+The crops are saved as images and pushed **sharded** (`crops/shard_000/…`, ≤5000
+files each, so the 10k-per-directory limit is never hit), with a
+`crops/metadata.jsonl` that pairs **every crop image with its caption + label
+fields** (HF `imagefolder` convention — the dataset viewer shows image + caption
+together, and `load_dataset("imagefolder", ...)` returns them joined). The repo also
+gets `pseudo_labels.parquet` (full table) and `golden_eval.json`.
 
 ## Hand-labeling the golden set
 

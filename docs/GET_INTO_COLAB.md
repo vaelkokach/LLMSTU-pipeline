@@ -1,4 +1,4 @@
-# Getting this repo into Colab (do I need GitHub?)
+    # Getting this repo into Colab (do I need GitHub?)
 
 **Short answer: no, GitHub is not required — but it's the smoothest option.** The
 notebook just needs the `llmstu/` package + scripts present in the Colab working
@@ -14,7 +14,7 @@ git init
 git add .
 git commit -m "LLMSTU enhancement pipeline"
 git branch -M main
-git remote add origin https://github.com/<you>/LLMSTU-pipeline.git
+git remote add origin https://github.com/vaelkokach/LLMSTU-pipeline.git
 git push -u origin main
 ```
 

@@ -56,6 +56,7 @@ class DataConfig:
     crops_repo: str = "WaelK/LLMSTU-crops"      # where enhanced crops+labels are pushed
     workdir: str = "./work"
     frames_glob: str = "**/*.jpg"
+    upload_shard_size: int = 5000               # crops per shard folder on upload (<10k HF limit)
 
 
 @dataclass
