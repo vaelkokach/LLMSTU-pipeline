@@ -8,15 +8,26 @@ from typing import Iterator, List, Optional
 
 
 def download_frames(repo_id: str, subdir: str, dest: Path,
-                    token: Optional[str] = None) -> Path:
-    """Snapshot the frames subfolder of a dataset repo to `dest`."""
+                    token: Optional[str] = None,
+                    shards: Optional[List[str]] = None) -> Path:
+    """Snapshot the frames subfolder of a dataset repo to `dest`.
+
+    shards: optional list of shard folder names (e.g. ["shard_000"]) to fetch
+            ONLY those subfolders instead of the whole dataset. Great for tuning
+            — pull ~1 shard (~1.7GB) instead of all 21 (~35GB). Names without a
+            path are matched under subdir; full patterns are used as-is.
+    """
     from huggingface_hub import snapshot_download
 
     dest = Path(dest)
     dest.mkdir(parents=True, exist_ok=True)
+    if shards:
+        patterns = [s if "/" in s else f"{subdir}/{s}/**" for s in shards]
+    else:
+        patterns = [f"{subdir}/**"]
     local = snapshot_download(
         repo_id=repo_id, repo_type="dataset", token=token,
-        allow_patterns=[f"{subdir}/**"], local_dir=str(dest),
+        allow_patterns=patterns, local_dir=str(dest),
     )
     return Path(local) / subdir
 
