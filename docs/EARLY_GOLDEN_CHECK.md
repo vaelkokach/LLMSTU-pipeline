@@ -22,8 +22,11 @@ frames = io.download_frames(cfg.data.source_repo, cfg.data.source_subdir,
 
 crop_mod.run(io.iter_frames(frames, cfg.data.frames_glob), Path('work/crops'),
              cfg.crop, manifest_path=Path('work/crops_manifest.jsonl'))
+# Cap captioning for the early check — a wide classroom frame yields ~10 crops, so
+# 2 shards is ~100k crops. You only need a few hundred labeled for a 200-crop golden
+# set. limit=800 keeps this fast; drop the limit only for the real full run.
 caption_mod.run(Path('work/crops_manifest.jsonl'), Path('work/crops'),
-                Path('work/pseudo_labels.jsonl'), cfg.caption)
+                Path('work/pseudo_labels.jsonl'), cfg.caption, limit=800)
 ```
 
 ## 2. Build a ~200-crop golden sample

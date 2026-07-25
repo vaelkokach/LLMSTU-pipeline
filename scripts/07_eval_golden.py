@@ -63,8 +63,27 @@ def main():
     overall = sum(accs) / len(accs) if accs else 0.0
     meta = {"n_reviewed": len(reviewed), "overall": overall}
 
+    # per-group (representative vs hard) overall accuracy, if groups are present
+    def _group_overall(rows):
+        gaccs = []
+        for f in fields:
+            pairs = [(it["pseudo"].get(f), it["golden"].get(f))
+                     for it in rows if f in it.get("golden", {})]
+            if pairs:
+                gaccs.append(sum(str(p) == str(g) for p, g in pairs) / len(pairs))
+        return (sum(gaccs) / len(gaccs)) if gaccs else 0.0
+
+    groups = {}
+    for gname in ("representative", "hard"):
+        grows = [it for it in reviewed if it.get("group") == gname]
+        if grows:
+            groups[gname] = {"n": len(grows), "overall": _group_overall(grows)}
+    meta["groups"] = groups
+
     # console summary
     print(f"\nGolden eval — {len(reviewed)} reviewed crops | overall macro-acc {overall*100:.1f}%")
+    for gname, g in groups.items():
+        print(f"  {gname:<15} {g['overall']*100:5.1f}%  (n={g['n']})")
     print(f"{'field':<20} {'acc':>6}  n")
     for s in scores:
         print(f"{s['field']:<20} {s['accuracy']*100:5.0f}% {s['n']:>4}")

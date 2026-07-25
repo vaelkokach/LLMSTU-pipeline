@@ -61,9 +61,16 @@ class DataConfig:
 
 
 @dataclass
+class DedupConfig:
+    hamming_threshold: int = 6   # dHash distance below which same-seat crops = duplicate
+    cell_px: int = 64            # seat-region grid size for grouping crops in space
+    hash_size: int = 8           # dHash resolution (size*size bits)
+
+
+@dataclass
 class EvalConfig:
-    n_samples: int = 500
-    stratify_by: str = "engagement_level"       # balance golden set across this field
+    n_samples: int = 1500                       # final golden set size (1.5-2k is plenty)
+    stratify_by: str = "engagement_level"       # legacy single-field (03 now multi-field)
     seed: int = 13
 
 
@@ -72,6 +79,7 @@ class Config:
     crop: CropConfig = field(default_factory=CropConfig)
     caption: CaptionConfig = field(default_factory=CaptionConfig)
     data: DataConfig = field(default_factory=DataConfig)
+    dedup: DedupConfig = field(default_factory=DedupConfig)
     eval: EvalConfig = field(default_factory=EvalConfig)
 
     def to_dict(self) -> Dict[str, Any]:
@@ -93,6 +101,7 @@ def load(path: Optional[str] = None) -> Config:
         _merge(cfg.crop, raw.get("crop", {}))
         _merge(cfg.caption, raw.get("caption", {}))
         _merge(cfg.data, raw.get("data", {}))
+        _merge(cfg.dedup, raw.get("dedup", {}))
         _merge(cfg.eval, raw.get("eval", {}))
     # env overrides for the things you tweak most on a cloud box
     cfg.caption.model_id = os.environ.get("LLMSTU_MODEL_ID", cfg.caption.model_id)

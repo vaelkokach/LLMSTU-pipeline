@@ -163,7 +163,7 @@ document.addEventListener('keydown',e=>{
 
 $('#export').onclick=()=>{
   const out=state.items.map(it=>({
-    id:it.id,crop_path:it.crop_path,
+    id:it.id,crop_path:it.crop_path,group:it.group||'representative',
     pseudo:it.pseudo,
     golden:Object.fromEntries(Object.entries(state.labels[it.id]||it.pseudo)
              .filter(([k])=>k!=='_status')),

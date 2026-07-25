@@ -38,8 +38,13 @@ data:
   workdir: ./work
   frames_glob: "**/*.jpg"
 
+dedup:
+  hamming_threshold: 6    # dHash distance below which same-seat crops = duplicate (4 gentle, 8-10 aggressive)
+  cell_px: 64             # seat-region grid size (px) for grouping crops in space
+  hash_size: 8            # dHash resolution
+
 eval:
-  n_samples: 500
+  n_samples: 1500         # final golden set size (1.5-2k gives ~2.5% margin of error)
   stratify_by: engagement_level
   seed: 13
 

@@ -1,0 +1,37 @@
+<style>
+body{font:13px system-ui,Segoe UI,Roboto,sans-serif;background:#0f1115;color:#e6e8ec;margin:0;padding:20px}
+h1{font-size:18px} h2{font-size:15px;margin-top:26px;border-top:1px solid #2a2f3a;padding-top:14px}
+.meta{color:#9aa3b2;font-size:12px;margin:2px 0 10px}
+.grid{display:flex;flex-wrap:wrap;gap:8px}
+.grid img{height:150px;border:1px solid #2a2f3a;border-radius:6px;background:#000}
+table{border-collapse:collapse;width:100%;margin-top:8px}
+td,th{border:1px solid #2a2f3a;padding:6px 8px;vertical-align:top;font-size:12px}
+th{background:#171a21;position:sticky;top:0}
+td.k{color:#9aa3b2;white-space:nowrap}
+.diff{background:#3a2a15}
+img.thumb{height:120px;border-radius:6px}
+code{color:#8fd0ff}
+</style>
+<h1>Schema tuning — field-set comparison</h1>
+<div class='meta'>Per enum field: % of crops answered concretely (not "unknown"). A field that's mostly "unknown" is ambiguous under this schema — consider dropping it or merging its categories. Confirm correctness on the golden set later; this measures decidability.</div>
+<table><tr><th>variant</th><th>schema</th><th># fields</th><th>mean concrete-rate</th><th>mean confidence</th></tr>
+<tr><td>s_full</td><td class='k'>full</td><td>11</td><td>85%</td><td>92%</td></tr>
+<tr><td>s_no_attn_gaze_merged</td><td class='k'>no_attn_gaze_merged</td><td>10</td><td>82%</td><td>93%</td></tr>
+</table>
+<h2>s_full <span class='pill'>full</span></h2>
+<table><tr><th>field</th><th>concrete-rate</th></tr>
+<tr><td class='k'>activity</td><td>100%</td></tr>
+<tr><td class='k'>gaze_direction</td><td>96%</td></tr>
+<tr><td class='k'>attention_target</td><td>100%</td></tr>
+<tr><td class='k'>engagement_level</td><td>100%</td></tr>
+<tr><td class='k'>posture</td><td>96%</td></tr>
+<tr><td class='k'>hand_state</td><td class='diff'>21%</td></tr>
+</table>
+<h2>s_no_attn_gaze_merged <span class='pill'>no_attn_gaze_merged</span></h2>
+<table><tr><th>field</th><th>concrete-rate</th></tr>
+<tr><td class='k'>activity</td><td>100%</td></tr>
+<tr><td class='k'>gaze_direction</td><td>96%</td></tr>
+<tr><td class='k'>engagement_level</td><td>100%</td></tr>
+<tr><td class='k'>posture</td><td>96%</td></tr>
+<tr><td class='k'>hand_state</td><td class='diff'>21%</td></tr>
+</table>

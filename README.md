@@ -32,11 +32,18 @@ export HF_TOKEN=hf_xxx                      # write token
 # 1) detect + crop students  (downloads frames from HF if --frames omitted)
 python scripts/01_crop.py --out ./work/crops
 
-# 2) pseudo-label crops with Qwen3.5
-python scripts/02_caption.py --crops ./work/crops --out ./work/pseudo_labels.jsonl
+# 1b) drop near-duplicate crops (1-fps footage) BEFORE captioning — big cost saver
+python scripts/09_dedup.py --manifest ./work/crops_manifest.jsonl --crops ./work/crops \
+    --out ./work/crops_manifest_dedup.jsonl
 
-# 3) build the golden-eval sample + labeling payload
-python scripts/03_sample_eval.py --labels ./work/pseudo_labels.jsonl --crops ./work/crops --n 500 --embed
+# 2) pseudo-label the DEDUPED crops with Qwen3.5
+python scripts/02_caption.py --manifest ./work/crops_manifest_dedup.jsonl \
+    --crops ./work/crops --out ./work/pseudo_labels.jsonl
+
+# 3) build the golden-eval sample (stratified + hard subset) + labeling payload
+python scripts/03_sample_eval.py --labels ./work/pseudo_labels.jsonl --crops ./work/crops \
+    --n 1500 --stratify-fields engagement_level,activity,gaze_direction \
+    --min-per-class 40 --hard-frac 0.2 --embed
 
 # 4) score the pseudo-labels against your hand-corrected golden.json
 python scripts/07_eval_golden.py --golden labeling/golden.json
@@ -47,6 +54,20 @@ python scripts/04_upload.py --repo WaelK/LLMSTU-crops
 
 **Tip — validate before the full run:** caption just 1–2 shards, hand-label ~200
 crops, and score them first. See `docs/EARLY_GOLDEN_CHECK.md`.
+
+**Near-duplicate removal (1-fps footage).** Because frames are 1/second, a still
+student produces many near-identical crops. `scripts/09_dedup.py` groups crops by
+(video, seat region), orders them in time, and keeps a crop only when it differs
+enough (perceptual dHash) from the last kept one — collapsing static runs while
+keeping frames where something changes. Run it between crop and caption; it can cut
+the crop count (and caption cost) substantially. Tune `dedup.hamming_threshold` in
+`config.yaml` (4 = gentle, 6 = default, 8–10 = aggressive).
+
+**Golden set (step 3).** Size is driven by precision + category coverage, not the
+million-crop pool — 1,500–2,000 gives ~±2.5% margin. `03_sample_eval.py` builds a
+**representative** set (stratified over several fields with a per-class floor so rare
+categories are covered) plus a **hard** subset (lowest `model_confidence`, where
+errors concentrate). `07_eval_golden.py` reports accuracy for each group separately.
 
 ### What gets uploaded (step 5)
 

@@ -83,10 +83,13 @@ def schema_report(variants: List[Dict], out_html: Path) -> Path:
 def golden_report(scores: List[Dict], disagreements: Dict[str, List[Dict]],
                   meta: Dict, out_html: Path) -> Path:
     """scores: [{field, accuracy, n}]; disagreements: {field:[{crop, pseudo, golden}]}."""
+    gline = ""
+    for gname, g in (meta.get("groups") or {}).items():
+        gline += f" · {html.escape(gname)} <b>{g['overall']*100:.1f}%</b> (n={g['n']})"
     parts = [f"<style>{_CSS}</style>", "<h1>Pseudo-labels vs golden — accuracy</h1>",
              f"<div class='meta'>{html.escape(str(meta.get('n_reviewed',0)))} human-reviewed "
              f"crops · overall macro-accuracy "
-             f"<b>{meta.get('overall',0)*100:.1f}%</b></div>"]
+             f"<b>{meta.get('overall',0)*100:.1f}%</b>{gline}</div>"]
     parts.append("<table><tr><th>field</th><th>accuracy</th><th>n</th></tr>")
     for s in scores:
         pct = s["accuracy"] * 100
