@@ -31,8 +31,10 @@ class CropConfig:
     pose_model: str = "yolo11m-pose.pt"  # ultralytics pose model
     kpt_conf: float = 0.35               # min confidence for a keypoint to count
     min_head_kpts: int = 1               # require >=this many head keypoints (nose/eyes/ears)
-    min_native_px: int = 90              # min head span in ORIGINAL px (below -> too far/pixelated)
-    blur_min_var: float = 25.0           # min Laplacian variance (below -> blurry; 0 disables)
+    min_face_kpts: int = 2               # require >=this many FACE keypoints (nose/eyes) ->
+                                         #   drops faces occluded behind monitors (0 disables)
+    min_native_px: int = 120             # min head span in ORIGINAL px (raise -> stricter on pixelation)
+    blur_min_var: float = 40.0           # min Laplacian variance (below -> blurry; 0 disables)
 
 
 @dataclass

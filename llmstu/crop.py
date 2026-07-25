@@ -22,7 +22,8 @@ from .config import CropConfig
 from . import quality
 
 # COCO pose keypoint indices
-_HEAD_KPTS = [0, 1, 2, 3, 4]      # nose, eyes, ears
+_HEAD_KPTS = [0, 1, 2, 3, 4]      # nose, eyes, ears (used to anchor the crop box)
+_FACE_KPTS = [0, 1, 2]            # nose, left_eye, right_eye (visibility of the actual face)
 _SHOULDER_KPTS = [5, 6]
 
 
@@ -82,9 +83,13 @@ def _crop_pose(img, res, cfg, stats) -> List[Tuple[Image.Image, Dict]]:
     order = confs.argsort()[::-1][: cfg.max_per_frame]
     for i in order:
         kp = kps[i]
+        face = [kp[j] for j in _FACE_KPTS if kp[j, 2] >= cfg.kpt_conf]
+        if cfg.min_face_kpts and len(face) < cfg.min_face_kpts:
+            stats["face_occluded"] = stats.get("face_occluded", 0) + 1  # face hidden (monitor) -> drop
+            continue
         head = [kp[j] for j in _HEAD_KPTS if kp[j, 2] >= cfg.kpt_conf]
         if len(head) < cfg.min_head_kpts:
-            stats["no_head"] = stats.get("no_head", 0) + 1     # no visible face/head -> drop
+            stats["no_head"] = stats.get("no_head", 0) + 1     # no visible head -> drop
             continue
         xs = [p[0] for p in head]
         ys = [p[1] for p in head]
@@ -104,6 +109,7 @@ def _crop_pose(img, res, cfg, stats) -> List[Tuple[Image.Image, Dict]]:
                 "bbox_person": [float(v) for v in boxes[i]],
                 "det_conf": float(confs[i]),
                 "head_kpts": int(len(head)),
+                "face_kpts": int(len(face)),
                 "head_span_px": float(head_span)}
         r = _finalize(img, box, meta, cfg, stats)
         if r:
@@ -209,6 +215,7 @@ def run(
     print(f"[crop] {mode}: wrote {n_crops} crops -> {out_dir}")
     if dropped:
         print(f"[crop] dropped -> " + ", ".join(f"{k}:{v}" for k, v in dropped.items())
-              + "  (no_head=no visible face, too_far=below min_native_px, "
-                "blurry=below blur_min_var, too_small=crop box < min_side_px)")
+              + "  (face_occluded=eyes/nose not visible, no_head=no head kpts, "
+                "too_far=below min_native_px, blurry=below blur_min_var, "
+                "too_small=crop box < min_side_px)")
     return manifest_path
