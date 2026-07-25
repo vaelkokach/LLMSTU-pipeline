@@ -35,6 +35,12 @@ def main():
     ap.add_argument("--zip", default=None, help="zip path inside the bucket")
     ap.add_argument("--repo", default=None, help="crops repo (default: config data.crops_repo)")
     ap.add_argument("--shard-size", type=int, default=None)
+    ap.add_argument("--output", choices=["hf", "zip"], default="hf",
+                    help="hf = upload each shard to the Hub; zip = save each shard as a "
+                         "local .zip to --out-dir (upload later with 17_upload_zips.py)")
+    ap.add_argument("--out-dir", default="./work/out",
+                    help="where shard zips go in --output zip mode (point at a mounted "
+                         "Google Drive folder to persist across disconnects)")
     ap.add_argument("--token", default=None)
     ap.add_argument("--list", action="store_true", help="list bucket contents and exit")
     args = ap.parse_args()
@@ -65,15 +71,23 @@ def main():
     for i, f in enumerate(all_frames):
         shards.setdefault("shard_%03d" % (i // shard_size), []).append(f)
     names = sorted(shards)
-    todo = [s for s in names if not io.shard_done(repo, s, token)]
-    print(f"[local] {len(names)} shards, {len(todo)} remaining: {todo or 'none'}")
+    out_dir = Path(args.out_dir)
+
+    def _done(shard):
+        if args.output == "zip":
+            return (out_dir / f"{shard}.zip").exists()      # resume by local zip presence
+        return io.shard_done(repo, shard, token)
+
+    todo = [s for s in names if not _done(s)]
+    print(f"[local] {len(names)} shards, {len(todo)} remaining ({args.output} output): {todo or 'none'}")
     if not todo:
-        print("[local] all shards done. Next: scripts/14_golden_from_hf.py")
+        print("[local] all shards done. Next: scripts/14_golden_from_hf.py "
+              "(or 17_upload_zips.py if you saved zips)")
         return
 
     cap = caption_mod.load_captioner(cfg.caption)      # load model once
     for shard in names:
-        if io.shard_done(repo, shard, token):
+        if _done(shard):
             continue
         crops = work / "crops"
         stage = work / "stage"
@@ -91,14 +105,22 @@ def main():
                              cell_px=cfg.dedup.cell_px, hash_size=cfg.dedup.hash_size)
         caption_mod.run(manifest_dedup, crops, labels, cfg.caption, cap=cap)
         n = io.stage_shard(crops, labels, stage, shard, shard_size=shard_size)
-        io.ensure_repo(repo, token=token)
-        io.upload_dir(stage, repo, token=token)
-        io.mark_shard_done(repo, shard, token=token)
-        print(f"[shard {shard}] uploaded {n} crops + labels -> {repo}")
+        if args.output == "zip":
+            zp = io.zip_dir(stage, out_dir / f"{shard}.zip")
+            print(f"[shard {shard}] saved {n} crops + labels -> {zp}")
+        else:
+            io.ensure_repo(repo, token=token)
+            io.upload_dir(stage, repo, token=token)
+            io.mark_shard_done(repo, shard, token=token)
+            print(f"[shard {shard}] uploaded {n} crops + labels -> {repo}")
         shutil.rmtree(crops, ignore_errors=True)
         shutil.rmtree(stage, ignore_errors=True)
 
-    print("[local] all shards processed. Next: scripts/14_golden_from_hf.py")
+    if args.output == "zip":
+        print(f"[local] done. {len(names)} shard zips in {out_dir}. Download them, then "
+              f"later run: python scripts/17_upload_zips.py --zips-dir <dir> --repo {repo}")
+    else:
+        print("[local] all shards processed. Next: scripts/14_golden_from_hf.py")
 
 
 if __name__ == "__main__":

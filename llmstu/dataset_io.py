@@ -273,6 +273,27 @@ def stage_shard(crops_dir: Path, labels_jsonl: Path, stage: Path,
     return n
 
 
+def zip_dir(src_dir: Path, zip_path: Path) -> Path:
+    """Zip a directory tree (stored, no compression — jpgs are already compressed)."""
+    import zipfile
+    src_dir, zip_path = Path(src_dir), Path(zip_path)
+    zip_path.parent.mkdir(parents=True, exist_ok=True)
+    with zipfile.ZipFile(zip_path, "w", zipfile.ZIP_STORED) as z:
+        for f in src_dir.glob("**/*"):
+            if f.is_file():
+                z.write(f, arcname=str(f.relative_to(src_dir)))
+    return zip_path
+
+
+def unzip_to(zip_path: Path, dest: Path) -> Path:
+    import zipfile
+    dest = Path(dest)
+    dest.mkdir(parents=True, exist_ok=True)
+    with zipfile.ZipFile(zip_path) as z:
+        z.extractall(dest)
+    return dest
+
+
 def upload_dir(local_dir: Path, repo_id: str, token: Optional[str] = None):
     """Add a staged folder to the crops repo (resumable, skips unchanged files)."""
     from huggingface_hub import HfApi
