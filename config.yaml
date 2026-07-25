@@ -12,6 +12,13 @@ crop:
   min_side_px: 48              # drop tiny/far students
   max_per_frame: 60
   out_size: 512                # bigger crops = more facial detail (VRAM/compute to spare)
+  # --- pose-based, quality-gated cropping (fixes headless/bad crops + pixelation) ---
+  use_pose: true               # crop from head keypoints -> every crop contains a face/head
+  pose_model: yolo11l-pose.pt  # big card -> large pose model for better recall
+  kpt_conf: 0.35               # min keypoint confidence
+  min_head_kpts: 1             # require >=1 head keypoint (nose/eyes/ears) -> no headless crops
+  min_native_px: 90            # min head span in ORIGINAL px (raise to 120 = stricter on pixelation)
+  blur_min_var: 25.0           # drop crops blurrier than this (raise to 40 = stricter; 0 disables)
 #mode=upper_body head_frac=0.55 margin=0.25 det=yolo11l.pt conf=0.35  ·  90 crops from 8 frames (avg 11.2/frame)
 caption:
   # Tuned for a single ~95GB GPU (H100 NVL / GH200 class).

@@ -1,0 +1,194 @@
+<style>
+body{font:13px system-ui,Segoe UI,Roboto,sans-serif;background:#0f1115;color:#e6e8ec;margin:0;padding:20px}
+h1{font-size:18px} h2{font-size:15px;margin-top:26px;border-top:1px solid #2a2f3a;padding-top:14px}
+.meta{color:#9aa3b2;font-size:12px;margin:2px 0 10px}
+.grid{display:flex;flex-wrap:wrap;gap:8px}
+.grid img{height:150px;border:1px solid #2a2f3a;border-radius:6px;background:#000}
+table{border-collapse:collapse;width:100%;margin-top:8px}
+td,th{border:1px solid #2a2f3a;padding:6px 8px;vertical-align:top;font-size:12px}
+th{background:#171a21;position:sticky;top:0}
+td.k{color:#9aa3b2;white-space:nowrap}
+.diff{background:#3a2a15}
+img.thumb{height:120px;border-radius:6px}
+code{color:#8fd0ff}
+</style>
+<h1>Pseudo-labels vs golden — accuracy</h1>
+<div class='meta'>195 human-reviewed crops · overall macro-accuracy <b>88.3%</b> · representative <b>88.8%</b> (n=155) · hard <b>86.2%</b> (n=40)</div>
+<table><tr><th>field</th><th>accuracy</th><th>n</th></tr>
+<tr><td class='k'>activity</td><td>79%</td><td>195</td></tr>
+<tr><td class='k'>gaze_direction</td><td>79%</td><td>195</td></tr>
+<tr><td class='k'>attention_target</td><td>81%</td><td>195</td></tr>
+<tr><td class='k'>engagement_level</td><td>76%</td><td>195</td></tr>
+<tr><td class='k'>posture</td><td>85%</td><td>195</td></tr>
+<tr><td class='k'>hand_state</td><td>95%</td><td>195</td></tr>
+<tr><td class='k'>phone_visible</td><td>98%</td><td>195</td></tr>
+<tr><td class='k'>laptop_visible</td><td>93%</td><td>195</td></tr>
+<tr><td class='k'>talking</td><td>97%</td><td>195</td></tr>
+<tr><td class='k'>occluded</td><td>98%</td><td>195</td></tr>
+</table>
+<h2>activity — disagreements (pseudo → golden)</h2>
+<table><tr><th>crop</th><th>pseudo</th><th>golden</th></tr>
+<tr><td class='k'>crops/t000013_960_f000280__p06.jpg</td><td class='diff'>listening</td><td>other</td></tr>
+<tr><td class='k'>crops/t000000_000_f000000_video_0024_0_10_20251014141757_20251014142848__p01.jpg</td><td class='diff'>listening</td><td>talking_to_peer</td></tr>
+<tr><td class='k'>crops/t000014_958_f000300_video_0056_0_10_20251024112504_20251024113604__p06.jpg</td><td class='diff'>listening</td><td>using_laptop</td></tr>
+<tr><td class='k'>crops/t000000_996_f000020__p03.jpg</td><td class='diff'>listening</td><td>looking_away</td></tr>
+<tr><td class='k'>crops/t000023_957_f000480__p03.jpg</td><td class='diff'>other</td><td>using_phone</td></tr>
+<tr><td class='k'>crops/t000000_000_f000000_video_0009_0_10_20251017113819_20251017115031__p16.jpg</td><td class='diff'>listening</td><td>other</td></tr>
+<tr><td class='k'>crops/t000024_957_f000500__p12.jpg</td><td class='diff'>listening</td><td>looking_away</td></tr>
+<tr><td class='k'>crops/t000019_977_f000400__p13.jpg</td><td class='diff'>looking_away</td><td>other</td></tr>
+<tr><td class='k'>crops/t000000_951_f000019_video_0130_0_10_20251111144213_20251111145301__p06.jpg</td><td class='diff'>talking_to_peer</td><td>listening</td></tr>
+<tr><td class='k'>crops/t000018_054_f000361__p08.jpg</td><td class='diff'>listening</td><td>other</td></tr>
+<tr><td class='k'>crops/t000020_979_f000418__p06.jpg</td><td class='diff'>using_laptop</td><td>other</td></tr>
+<tr><td class='k'>crops/t000015_946_f000320__p06.jpg</td><td class='diff'>listening</td><td>other</td></tr>
+<tr><td class='k'>crops/t000024_957_f000500__p03.jpg</td><td class='diff'>using_laptop</td><td>other</td></tr>
+<tr><td class='k'>crops/t000034_362_f000684__p14.jpg</td><td class='diff'>reading</td><td>using_phone</td></tr>
+<tr><td class='k'>crops/t000014_263_f000285_video_0024_0_10_20251014141757_20251014142848__p03.jpg</td><td class='diff'>listening</td><td>talking_to_peer</td></tr>
+<tr><td class='k'>crops/t000001_986_f000040__p10.jpg</td><td class='diff'>listening</td><td>other</td></tr>
+<tr><td class='k'>crops/t000000_951_f000019_video_0130_0_10_20251111144213_20251111145301__p04.jpg</td><td class='diff'>listening</td><td>other</td></tr>
+<tr><td class='k'>crops/t000024_957_f000500__p10.jpg</td><td class='diff'>head_down_sleeping</td><td>looking_away</td></tr>
+<tr><td class='k'>crops/t000008_992_f000180__p15.jpg</td><td class='diff'>eating_drinking</td><td>listening</td></tr>
+<tr><td class='k'>crops/t000530_850_f006620_video_0239_0_10_20251027093539_20251027095157__p02.jpg</td><td class='diff'>looking_away</td><td>using_phone</td></tr>
+</table>
+<h2>gaze_direction — disagreements (pseudo → golden)</h2>
+<table><tr><th>crop</th><th>pseudo</th><th>golden</th></tr>
+<tr><td class='k'>crops/t000013_960_f000280__p06.jpg</td><td class='diff'>teacher_or_board</td><td>unknown</td></tr>
+<tr><td class='k'>crops/t000000_000_f000000_video_0024_0_10_20251014141757_20251014142848__p01.jpg</td><td class='diff'>own_desk</td><td>peer</td></tr>
+<tr><td class='k'>crops/t000014_958_f000300_video_0056_0_10_20251024112504_20251024113604__p06.jpg</td><td class='diff'>teacher_or_board</td><td>laptop</td></tr>
+<tr><td class='k'>crops/t000023_957_f000480__p03.jpg</td><td class='diff'>own_desk</td><td>down</td></tr>
+<tr><td class='k'>crops/t000012_945_f000260__p07.jpg</td><td class='diff'>teacher_or_board</td><td>away_or_window</td></tr>
+<tr><td class='k'>crops/t000002_996_f000060_video_0142_0_10_20251111165604_20251111170852__p02.jpg</td><td class='diff'>teacher_or_board</td><td>own_desk</td></tr>
+<tr><td class='k'>crops/t000000_000_f000000_video_0024_0_10_20251014141757_20251014142848__p15.jpg</td><td class='diff'>teacher_or_board</td><td>peer</td></tr>
+<tr><td class='k'>crops/t000027_604_f000551__p01.jpg</td><td class='diff'>own_desk</td><td>peer</td></tr>
+<tr><td class='k'>crops/t000000_000_f000000_video_0009_0_10_20251017113819_20251017115031__p16.jpg</td><td class='diff'>teacher_or_board</td><td>unknown</td></tr>
+<tr><td class='k'>crops/t000024_957_f000500__p12.jpg</td><td class='diff'>teacher_or_board</td><td>peer</td></tr>
+<tr><td class='k'>crops/t000025_994_f000520__p07.jpg</td><td class='diff'>teacher_or_board</td><td>peer</td></tr>
+<tr><td class='k'>crops/t000019_977_f000400__p13.jpg</td><td class='diff'>away_or_window</td><td>unknown</td></tr>
+<tr><td class='k'>crops/t000000_951_f000019_video_0130_0_10_20251111144213_20251111145301__p06.jpg</td><td class='diff'>peer</td><td>teacher_or_board</td></tr>
+<tr><td class='k'>crops/t000018_054_f000361__p08.jpg</td><td class='diff'>teacher_or_board</td><td>unknown</td></tr>
+<tr><td class='k'>crops/t000020_979_f000418__p06.jpg</td><td class='diff'>laptop</td><td>unknown</td></tr>
+<tr><td class='k'>crops/t000015_946_f000320__p06.jpg</td><td class='diff'>teacher_or_board</td><td>unknown</td></tr>
+<tr><td class='k'>crops/t000024_957_f000500__p03.jpg</td><td class='diff'>laptop</td><td>unknown</td></tr>
+<tr><td class='k'>crops/t000033_257_f000665__p16.jpg</td><td class='diff'>laptop</td><td>peer</td></tr>
+<tr><td class='k'>crops/t000014_263_f000285_video_0024_0_10_20251014141757_20251014142848__p03.jpg</td><td class='diff'>teacher_or_board</td><td>peer</td></tr>
+<tr><td class='k'>crops/t000001_986_f000040__p10.jpg</td><td class='diff'>teacher_or_board</td><td>unknown</td></tr>
+</table>
+<h2>attention_target — disagreements (pseudo → golden)</h2>
+<table><tr><th>crop</th><th>pseudo</th><th>golden</th></tr>
+<tr><td class='k'>crops/t000013_960_f000280__p06.jpg</td><td class='diff'>instruction</td><td>unknown</td></tr>
+<tr><td class='k'>crops/t000014_958_f000300_video_0056_0_10_20251024112504_20251024113604__p06.jpg</td><td class='diff'>instruction</td><td>own_work</td></tr>
+<tr><td class='k'>crops/t000000_996_f000020__p01.jpg</td><td class='diff'>own_work</td><td>distracted</td></tr>
+<tr><td class='k'>crops/t000023_957_f000480__p03.jpg</td><td class='diff'>own_work</td><td>device</td></tr>
+<tr><td class='k'>crops/t000027_604_f000551__p01.jpg</td><td class='diff'>own_work</td><td>peer</td></tr>
+<tr><td class='k'>crops/t000000_000_f000000_video_0009_0_10_20251017113819_20251017115031__p16.jpg</td><td class='diff'>instruction</td><td>unknown</td></tr>
+<tr><td class='k'>crops/t000024_957_f000500__p12.jpg</td><td class='diff'>instruction</td><td>peer</td></tr>
+<tr><td class='k'>crops/t000019_977_f000400__p13.jpg</td><td class='diff'>distracted</td><td>unknown</td></tr>
+<tr><td class='k'>crops/t000000_951_f000019_video_0130_0_10_20251111144213_20251111145301__p06.jpg</td><td class='diff'>peer</td><td>instruction</td></tr>
+<tr><td class='k'>crops/t000018_054_f000361__p08.jpg</td><td class='diff'>instruction</td><td>unknown</td></tr>
+<tr><td class='k'>crops/t000020_979_f000418__p06.jpg</td><td class='diff'>device</td><td>unknown</td></tr>
+<tr><td class='k'>crops/t000015_946_f000320__p06.jpg</td><td class='diff'>instruction</td><td>unknown</td></tr>
+<tr><td class='k'>crops/t000024_957_f000500__p03.jpg</td><td class='diff'>device</td><td>unknown</td></tr>
+<tr><td class='k'>crops/t000033_257_f000665__p16.jpg</td><td class='diff'>device</td><td>peer</td></tr>
+<tr><td class='k'>crops/t000008_998_f000180_video_0069_0_10_20251024145236_20251024150324__p06.jpg</td><td class='diff'>own_work</td><td>distracted</td></tr>
+<tr><td class='k'>crops/t000014_263_f000285_video_0024_0_10_20251014141757_20251014142848__p03.jpg</td><td class='diff'>instruction</td><td>peer</td></tr>
+<tr><td class='k'>crops/t000530_850_f006620_video_0239_0_10_20251027093539_20251027095157__p04.jpg</td><td class='diff'>own_work</td><td>distracted</td></tr>
+<tr><td class='k'>crops/t000001_986_f000040__p10.jpg</td><td class='diff'>instruction</td><td>unknown</td></tr>
+<tr><td class='k'>crops/t000000_951_f000019_video_0130_0_10_20251111144213_20251111145301__p04.jpg</td><td class='diff'>instruction</td><td>unknown</td></tr>
+<tr><td class='k'>crops/t000008_992_f000180__p15.jpg</td><td class='diff'>distracted</td><td>instruction</td></tr>
+</table>
+<h2>engagement_level — disagreements (pseudo → golden)</h2>
+<table><tr><th>crop</th><th>pseudo</th><th>golden</th></tr>
+<tr><td class='k'>crops/t000013_960_f000280__p06.jpg</td><td class='diff'>engaged</td><td>unknown</td></tr>
+<tr><td class='k'>crops/t000000_000_f000000_video_0024_0_10_20251014141757_20251014142848__p01.jpg</td><td class='diff'>engaged</td><td>disengaged</td></tr>
+<tr><td class='k'>crops/t000014_958_f000300_video_0056_0_10_20251024112504_20251024113604__p06.jpg</td><td class='diff'>engaged</td><td>partially_engaged</td></tr>
+<tr><td class='k'>crops/t000000_996_f000020__p03.jpg</td><td class='diff'>partially_engaged</td><td>disengaged</td></tr>
+<tr><td class='k'>crops/t000000_996_f000020__p01.jpg</td><td class='diff'>partially_engaged</td><td>disengaged</td></tr>
+<tr><td class='k'>crops/t000023_957_f000480__p03.jpg</td><td class='diff'>engaged</td><td>disengaged</td></tr>
+<tr><td class='k'>crops/t000012_945_f000260__p07.jpg</td><td class='diff'>engaged</td><td>disengaged</td></tr>
+<tr><td class='k'>crops/t000026_886_f000540__p07.jpg</td><td class='diff'>engaged</td><td>disengaged</td></tr>
+<tr><td class='k'>crops/t000027_604_f000551__p01.jpg</td><td class='diff'>engaged</td><td>disengaged</td></tr>
+<tr><td class='k'>crops/t000000_000_f000000_video_0009_0_10_20251017113819_20251017115031__p16.jpg</td><td class='diff'>engaged</td><td>unknown</td></tr>
+<tr><td class='k'>crops/t000024_957_f000500__p12.jpg</td><td class='diff'>engaged</td><td>disengaged</td></tr>
+<tr><td class='k'>crops/t000922_065_f011229_video_0270_0_10_20251027173845_20251027180105__p00.jpg</td><td class='diff'>engaged</td><td>disengaged</td></tr>
+<tr><td class='k'>crops/t000019_977_f000400__p09.jpg</td><td class='diff'>engaged</td><td>disengaged</td></tr>
+<tr><td class='k'>crops/t000019_977_f000400__p13.jpg</td><td class='diff'>disengaged</td><td>unknown</td></tr>
+<tr><td class='k'>crops/t000943_736_f011680_video_0239_0_10_20251027093539_20251027095157__p02.jpg</td><td class='diff'>partially_engaged</td><td>unknown</td></tr>
+<tr><td class='k'>crops/t000018_054_f000361__p08.jpg</td><td class='diff'>engaged</td><td>unknown</td></tr>
+<tr><td class='k'>crops/t000027_604_f000551__p02.jpg</td><td class='diff'>partially_engaged</td><td>disengaged</td></tr>
+<tr><td class='k'>crops/t000020_979_f000418__p06.jpg</td><td class='diff'>engaged</td><td>unknown</td></tr>
+<tr><td class='k'>crops/t000015_946_f000320__p06.jpg</td><td class='diff'>engaged</td><td>unknown</td></tr>
+<tr><td class='k'>crops/t000024_957_f000500__p03.jpg</td><td class='diff'>engaged</td><td>unknown</td></tr>
+</table>
+<h2>posture — disagreements (pseudo → golden)</h2>
+<table><tr><th>crop</th><th>pseudo</th><th>golden</th></tr>
+<tr><td class='k'>crops/t000013_960_f000280__p06.jpg</td><td class='diff'>upright</td><td>unknown</td></tr>
+<tr><td class='k'>crops/t000012_945_f000260__p07.jpg</td><td class='diff'>unknown</td><td>leaning_forward</td></tr>
+<tr><td class='k'>crops/t000027_604_f000551__p01.jpg</td><td class='diff'>upright</td><td>leaning_back</td></tr>
+<tr><td class='k'>crops/t000024_957_f000500__p12.jpg</td><td class='diff'>upright</td><td>turned_away</td></tr>
+<tr><td class='k'>crops/t000943_736_f011680_video_0239_0_10_20251027093539_20251027095157__p02.jpg</td><td class='diff'>leaning_forward</td><td>leaning_back</td></tr>
+<tr><td class='k'>crops/t000018_054_f000361__p08.jpg</td><td class='diff'>upright</td><td>unknown</td></tr>
+<tr><td class='k'>crops/t000015_946_f000320__p06.jpg</td><td class='diff'>upright</td><td>unknown</td></tr>
+<tr><td class='k'>crops/t000024_957_f000500__p03.jpg</td><td class='diff'>leaning_forward</td><td>unknown</td></tr>
+<tr><td class='k'>crops/t000014_263_f000285_video_0024_0_10_20251014141757_20251014142848__p03.jpg</td><td class='diff'>upright</td><td>turned_away</td></tr>
+<tr><td class='k'>crops/t000001_986_f000040__p10.jpg</td><td class='diff'>upright</td><td>unknown</td></tr>
+<tr><td class='k'>crops/t000024_957_f000500__p10.jpg</td><td class='diff'>head_down</td><td>unknown</td></tr>
+<tr><td class='k'>crops/t000024_881_f000500__p05.jpg</td><td class='diff'>turned_away</td><td>unknown</td></tr>
+<tr><td class='k'>crops/t000025_711_f000513__p12.jpg</td><td class='diff'>upright</td><td>leaning_forward</td></tr>
+<tr><td class='k'>crops/t000000_000_f000000_video_0026_0_10_20251014144048_20251014145221__p02.jpg</td><td class='diff'>upright</td><td>leaning_forward</td></tr>
+<tr><td class='k'>crops/t000024_881_f000500__p08.jpg</td><td class='diff'>upright</td><td>leaning_forward</td></tr>
+<tr><td class='k'>crops/t000008_939_f000180_video_0244_0_10_20251027105909_20251027111009__p02.jpg</td><td class='diff'>leaning_forward</td><td>unknown</td></tr>
+<tr><td class='k'>crops/t000015_946_f000320__p07.jpg</td><td class='diff'>unknown</td><td>turned_away</td></tr>
+<tr><td class='k'>crops/t000009_543_f000190__p00.jpg</td><td class='diff'>leaning_forward</td><td>head_down</td></tr>
+<tr><td class='k'>crops/t000034_362_f000684__p02.jpg</td><td class='diff'>upright</td><td>leaning_forward</td></tr>
+<tr><td class='k'>crops/t000020_980_f000418__p00.jpg</td><td class='diff'>upright</td><td>leaning_forward</td></tr>
+</table>
+<h2>hand_state — disagreements (pseudo → golden)</h2>
+<table><tr><th>crop</th><th>pseudo</th><th>golden</th></tr>
+<tr><td class='k'>crops/t000014_990_f000300__p06.jpg</td><td class='diff'>unknown</td><td>writing</td></tr>
+<tr><td class='k'>crops/t000034_989_f000700__p01.jpg</td><td class='diff'>unknown</td><td>writing</td></tr>
+<tr><td class='k'>crops/t000008_998_f000180_video_0069_0_10_20251024145236_20251024150324__p00.jpg</td><td class='diff'>unknown</td><td>on_desk_idle</td></tr>
+<tr><td class='k'>crops/t000000_000_f000000_video_0026_0_10_20251014144048_20251014145221__p00.jpg</td><td class='diff'>unknown</td><td>on_desk_idle</td></tr>
+<tr><td class='k'>crops/t000012_945_f000260__p07.jpg</td><td class='diff'>unknown</td><td>gesturing</td></tr>
+<tr><td class='k'>crops/t000027_604_f000551__p01.jpg</td><td class='diff'>unknown</td><td>on_desk_idle</td></tr>
+<tr><td class='k'>crops/t000024_957_f000500__p02.jpg</td><td class='diff'>writing</td><td>on_phone</td></tr>
+<tr><td class='k'>crops/t000026_886_f000540__p06.jpg</td><td class='diff'>on_face</td><td>gesturing</td></tr>
+<tr><td class='k'>crops/t000013_960_f000280__p14.jpg</td><td class='diff'>unknown</td><td>gesturing</td></tr>
+</table>
+<h2>phone_visible — disagreements (pseudo → golden)</h2>
+<table><tr><th>crop</th><th>pseudo</th><th>golden</th></tr>
+<tr><td class='k'>crops/t000023_957_f000480__p03.jpg</td><td class='diff'>False</td><td>True</td></tr>
+<tr><td class='k'>crops/t000530_850_f006620_video_0239_0_10_20251027093539_20251027095157__p02.jpg</td><td class='diff'>False</td><td>True</td></tr>
+<tr><td class='k'>crops/t000024_957_f000500__p02.jpg</td><td class='diff'>False</td><td>True</td></tr>
+<tr><td class='k'>crops/t000019_953_f000399__p11.jpg</td><td class='diff'>False</td><td>True</td></tr>
+</table>
+<h2>laptop_visible — disagreements (pseudo → golden)</h2>
+<table><tr><th>crop</th><th>pseudo</th><th>golden</th></tr>
+<tr><td class='k'>crops/t000013_960_f000280__p06.jpg</td><td class='diff'>False</td><td>True</td></tr>
+<tr><td class='k'>crops/t000014_263_f000285_video_0024_0_10_20251014141757_20251014142848__p16.jpg</td><td class='diff'>True</td><td>False</td></tr>
+<tr><td class='k'>crops/t000026_886_f000540__p07.jpg</td><td class='diff'>True</td><td>False</td></tr>
+<tr><td class='k'>crops/t000027_604_f000551__p01.jpg</td><td class='diff'>True</td><td>False</td></tr>
+<tr><td class='k'>crops/t000000_000_f000000_video_0009_0_10_20251017113819_20251017115031__p16.jpg</td><td class='diff'>True</td><td>False</td></tr>
+<tr><td class='k'>crops/t000000_000_f000000_video_0026_0_10_20251014144048_20251014145221__p08.jpg</td><td class='diff'>True</td><td>False</td></tr>
+<tr><td class='k'>crops/t000922_065_f011229_video_0270_0_10_20251027173845_20251027180105__p00.jpg</td><td class='diff'>True</td><td>False</td></tr>
+<tr><td class='k'>crops/t000033_257_f000665__p04.jpg</td><td class='diff'>True</td><td>False</td></tr>
+<tr><td class='k'>crops/t000019_977_f000400__p09.jpg</td><td class='diff'>True</td><td>False</td></tr>
+<tr><td class='k'>crops/t000727_797_f008960_video_0239_0_10_20251027093539_20251027095157__p01.jpg</td><td class='diff'>True</td><td>False</td></tr>
+<tr><td class='k'>crops/t000000_951_f000019_video_0130_0_10_20251111144213_20251111145301__p06.jpg</td><td class='diff'>True</td><td>False</td></tr>
+<tr><td class='k'>crops/t000028_925_f000580__p00.jpg</td><td class='diff'>True</td><td>False</td></tr>
+<tr><td class='k'>crops/t000032_446_f000646__p02.jpg</td><td class='diff'>True</td><td>False</td></tr>
+</table>
+<h2>talking — disagreements (pseudo → golden)</h2>
+<table><tr><th>crop</th><th>pseudo</th><th>golden</th></tr>
+<tr><td class='k'>crops/t000000_000_f000000_video_0024_0_10_20251014141757_20251014142848__p01.jpg</td><td class='diff'>False</td><td>True</td></tr>
+<tr><td class='k'>crops/t000027_604_f000551__p01.jpg</td><td class='diff'>False</td><td>True</td></tr>
+<tr><td class='k'>crops/t000024_957_f000500__p12.jpg</td><td class='diff'>False</td><td>True</td></tr>
+<tr><td class='k'>crops/t000000_951_f000019_video_0130_0_10_20251111144213_20251111145301__p06.jpg</td><td class='diff'>True</td><td>False</td></tr>
+<tr><td class='k'>crops/t000021_009_f000418__p05.jpg</td><td class='diff'>False</td><td>True</td></tr>
+<tr><td class='k'>crops/t000005_976_f000120_video_0268_0_10_20251027165333_20251027171548__p01.jpg</td><td class='diff'>True</td><td>False</td></tr>
+</table>
+<h2>occluded — disagreements (pseudo → golden)</h2>
+<table><tr><th>crop</th><th>pseudo</th><th>golden</th></tr>
+<tr><td class='k'>crops/t000013_960_f000280__p06.jpg</td><td class='diff'>False</td><td>True</td></tr>
+<tr><td class='k'>crops/t000000_000_f000000_video_0024_0_10_20251014141757_20251014142848__p01.jpg</td><td class='diff'>True</td><td>False</td></tr>
+<tr><td class='k'>crops/t000024_957_f000500__p08.jpg</td><td class='diff'>False</td><td>True</td></tr>
+<tr><td class='k'>crops/t000006_675_f000133_video_0128_0_10_20251111142037_20251111143125__p09.jpg</td><td class='diff'>False</td><td>True</td></tr>
+</table>

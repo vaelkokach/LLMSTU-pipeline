@@ -19,11 +19,16 @@ from typing import Dict, Iterable, List, Optional, Tuple
 from PIL import Image
 
 from .config import CropConfig
+from . import quality
+
+# COCO pose keypoint indices
+_HEAD_KPTS = [0, 1, 2, 3, 4]      # nose, eyes, ears
+_SHOULDER_KPTS = [5, 6]
 
 
 def _load_detector(cfg: CropConfig):
     from ultralytics import YOLO
-    return YOLO(cfg.detector_model)
+    return YOLO(cfg.pose_model if cfg.use_pose else cfg.detector_model)
 
 
 def _wide_face_box(
@@ -46,39 +51,101 @@ def _wide_face_box(
     return ex1, ey1, ex2, ey2
 
 
-def crop_frame(
-    img: Image.Image, detector, cfg: CropConfig
-) -> List[Tuple[Image.Image, Dict]]:
-    """Return list of (crop_image, meta) for one frame."""
+def _finalize(img, box, meta, cfg, stats) -> Optional[Tuple[Image.Image, Dict]]:
+    """Apply size + blur gates, resize, and return (crop, meta) or None (dropped)."""
+    bx1, by1, bx2, by2 = box
+    if min(bx2 - bx1, by2 - by1) < cfg.min_side_px:
+        stats["too_small"] = stats.get("too_small", 0) + 1
+        return None
+    crop = img.crop((bx1, by1, bx2, by2))
+    if cfg.blur_min_var and cfg.blur_min_var > 0:
+        if quality.laplacian_var(crop) < cfg.blur_min_var:   # measure BEFORE upscale
+            stats["blurry"] = stats.get("blurry", 0) + 1
+            return None
+    if cfg.out_size and cfg.out_size > 0:
+        crop = _square_pad_resize(crop, cfg.out_size)
+    meta["bbox_crop"] = [bx1, by1, bx2, by2]
+    stats["kept"] = stats.get("kept", 0) + 1
+    return crop, meta
+
+
+def _crop_pose(img, res, cfg, stats) -> List[Tuple[Image.Image, Dict]]:
+    """Head-keypoint-anchored crops. Skips people with no visible head, so a crop
+    always contains a face/head (no hand-only or skull-top crops)."""
     W, H = img.size
-    res = detector.predict(
-        img, classes=[cfg.person_class_id], conf=cfg.conf, iou=cfg.iou,
-        imgsz=cfg.imgsz, verbose=False,
-    )[0]
-    out: List[Tuple[Image.Image, Dict]] = []
+    out = []
+    if res.keypoints is None or res.boxes is None:
+        return out
+    kps = res.keypoints.data.cpu().numpy()          # (N, 17, 3): x, y, conf
+    boxes = res.boxes.xyxy.cpu().numpy()
+    confs = res.boxes.conf.cpu().numpy()
+    order = confs.argsort()[::-1][: cfg.max_per_frame]
+    for i in order:
+        kp = kps[i]
+        head = [kp[j] for j in _HEAD_KPTS if kp[j, 2] >= cfg.kpt_conf]
+        if len(head) < cfg.min_head_kpts:
+            stats["no_head"] = stats.get("no_head", 0) + 1     # no visible face/head -> drop
+            continue
+        xs = [p[0] for p in head]
+        ys = [p[1] for p in head]
+        for j in _SHOULDER_KPTS:                                # add shoulders for context
+            if kp[j, 2] >= cfg.kpt_conf:
+                xs.append(kp[j, 0]); ys.append(kp[j, 1])
+        hx1, hy1, hx2, hy2 = min(xs), min(ys), max(xs), max(ys)
+        head_span = max(hx2 - hx1, hy2 - hy1)
+        if head_span < cfg.min_native_px:                       # too far/small -> pixelated
+            stats["too_far"] = stats.get("too_far", 0) + 1
+            continue
+        pw = cfg.margin_frac * (hx2 - hx1 + 1)
+        ph = cfg.margin_frac * (hy2 - hy1 + 1)
+        box = (max(0, int(hx1 - pw)), max(0, int(hy1 - ph * 1.6)),
+               min(W, int(hx2 + pw)), min(H, int(hy2 + ph * 1.4)))
+        meta = {"person_idx": int(i),
+                "bbox_person": [float(v) for v in boxes[i]],
+                "det_conf": float(confs[i]),
+                "head_kpts": int(len(head)),
+                "head_span_px": float(head_span)}
+        r = _finalize(img, box, meta, cfg, stats)
+        if r:
+            out.append(r)
+    return out
+
+
+def _crop_bbox(img, res, cfg, stats) -> List[Tuple[Image.Image, Dict]]:
+    """Legacy person-box crop (crop_mode head_wide/upper_body/person) + quality gates."""
+    W, H = img.size
+    out = []
     boxes = res.boxes
     if boxes is None:
         return out
     xyxy = boxes.xyxy.cpu().numpy()
     confs = boxes.conf.cpu().numpy()
-    # keep the most confident detections if a frame is very crowded
     order = confs.argsort()[::-1][: cfg.max_per_frame]
     for i in order:
         x1, y1, x2, y2 = xyxy[i]
-        bx1, by1, bx2, by2 = _wide_face_box(x1, y1, x2, y2, W, H, cfg)
-        if min(bx2 - bx1, by2 - by1) < cfg.min_side_px:
-            continue
-        crop = img.crop((bx1, by1, bx2, by2))
-        if cfg.out_size and cfg.out_size > 0:
-            crop = _square_pad_resize(crop, cfg.out_size)
-        meta = {
-            "person_idx": int(i),
-            "bbox_person": [float(x1), float(y1), float(x2), float(y2)],
-            "bbox_crop": [bx1, by1, bx2, by2],
-            "det_conf": float(confs[i]),
-        }
-        out.append((crop, meta))
+        box = _wide_face_box(x1, y1, x2, y2, W, H, cfg)
+        meta = {"person_idx": int(i),
+                "bbox_person": [float(x1), float(y1), float(x2), float(y2)],
+                "det_conf": float(confs[i])}
+        r = _finalize(img, box, meta, cfg, stats)
+        if r:
+            out.append(r)
     return out
+
+
+def crop_frame(
+    img: Image.Image, detector, cfg: CropConfig, stats: Optional[Dict] = None
+) -> List[Tuple[Image.Image, Dict]]:
+    """Return list of (crop_image, meta) for one frame. `stats` accumulates drop reasons."""
+    if stats is None:
+        stats = {}
+    res = detector.predict(
+        img, classes=[cfg.person_class_id], conf=cfg.conf, iou=cfg.iou,
+        imgsz=cfg.imgsz, verbose=False,
+    )[0]
+    if cfg.use_pose:
+        return _crop_pose(img, res, cfg, stats)
+    return _crop_bbox(img, res, cfg, stats)
 
 
 def _square_pad_resize(img: Image.Image, size: int) -> Image.Image:
@@ -116,6 +183,7 @@ def run(
                 pass
 
     detector = _load_detector(cfg)
+    stats: Dict[str, int] = {}
     n_crops = 0
     with manifest_path.open("a") as mf:
         for frame in frames:
@@ -127,7 +195,7 @@ def run(
             except Exception:
                 continue
             stem = frame.stem
-            for crop, meta in crop_frame(img, detector, cfg):
+            for crop, meta in crop_frame(img, detector, cfg, stats):
                 crop_name = f"{stem}__p{meta['person_idx']:02d}.jpg"
                 crop_path = out_dir / crop_name
                 crop.save(crop_path, quality=92)
@@ -136,5 +204,11 @@ def run(
                 mf.write(json.dumps(row) + "\n")
                 n_crops += 1
             mf.flush()
-    print(f"[crop] wrote {n_crops} crops -> {out_dir}")
+    dropped = {k: v for k, v in stats.items() if k != "kept"}
+    mode = "pose" if cfg.use_pose else f"bbox/{cfg.crop_mode}"
+    print(f"[crop] {mode}: wrote {n_crops} crops -> {out_dir}")
+    if dropped:
+        print(f"[crop] dropped -> " + ", ".join(f"{k}:{v}" for k, v in dropped.items())
+              + "  (no_head=no visible face, too_far=below min_native_px, "
+                "blurry=below blur_min_var, too_small=crop box < min_side_px)")
     return manifest_path

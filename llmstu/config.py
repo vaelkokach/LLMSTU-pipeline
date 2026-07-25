@@ -15,17 +15,24 @@ except ImportError:  # pragma: no cover
 
 @dataclass
 class CropConfig:
-    detector_model: str = "yolo11m.pt"   # ultralytics person detector
+    detector_model: str = "yolo11m.pt"   # ultralytics person detector (bbox path)
     person_class_id: int = 0
     conf: float = 0.35
     iou: float = 0.6
     imgsz: int = 1280                    # frames are wide-angle; keep resolution high
-    crop_mode: str = "head_wide"         # head_wide | upper_body | person
+    crop_mode: str = "head_wide"         # head_wide | upper_body | person (bbox path only)
     head_frac: float = 0.55              # top fraction of person box treated as head+shoulders
     margin_frac: float = 0.35            # extra context padding around the crop
-    min_side_px: int = 48                # drop crops smaller than this (far/tiny students)
+    min_side_px: int = 48                # drop crops smaller than this (final crop box)
     max_per_frame: int = 60
     out_size: int = 448                  # square resize written to disk (0 = keep native)
+    # --- pose-based, quality-gated cropping (recommended) ---
+    use_pose: bool = True                # crop from head keypoints -> guarantees a head in-frame
+    pose_model: str = "yolo11m-pose.pt"  # ultralytics pose model
+    kpt_conf: float = 0.35               # min confidence for a keypoint to count
+    min_head_kpts: int = 1               # require >=this many head keypoints (nose/eyes/ears)
+    min_native_px: int = 90              # min head span in ORIGINAL px (below -> too far/pixelated)
+    blur_min_var: float = 25.0           # min Laplacian variance (below -> blurry; 0 disables)
 
 
 @dataclass

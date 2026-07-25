@@ -94,7 +94,7 @@ function load(data){
 function buildForm(){
   const box=$('#fields');box.innerHTML='';
   for(const [name,spec] of Object.entries(state.fields)){
-    const row=document.createElement('div');row.className='row';row.dataset.field=name;
+    const row=document.createElement('div');row.className='row';
     const lab=document.createElement('label');lab.textContent=name.replace(/_/g,' ');
     row.appendChild(lab);
     let el;
