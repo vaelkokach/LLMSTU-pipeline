@@ -22,7 +22,7 @@ caption:
   dtype: bfloat16
   load_in_4bit: false            # keep false on 95GB: full bf16 is higher quality + faster
   attn_implementation: flash_attention_2   # big card: use flash-attn (fallback: sdpa)
-  prompt_name: v1_structured     # v1_structured | v2_concise | v3_reasoned | v4_fewshot
+  prompt_name: v2_concise     # v1_structured | v2_concise | v3_reasoned | v4_fewshot
   enable_thinking: false         # false = skip <think> so the model emits JSON directly
   max_new_tokens: 512            # headroom in case the model still reasons a little
   batch_size: 32                 # ~40GB headroom; push toward 48-64 while watching nvidia-smi
