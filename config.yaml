@@ -39,7 +39,7 @@ caption:
   batch_size: 32                 # ~40GB headroom; push toward 48-64 while watching nvidia-smi
   max_pixels: 802816             # = 1024*28*28; >512px crop area, so 512 crops stay full
   temperature: 0.0
-  vllm_gpu_mem_util: 0.92        # let vLLM use most of the 95GB
+  vllm_gpu_mem_util: 0.82        # let vLLM use most of the 95GB
   vllm_max_num_seqs: 128         # high concurrency on a big card
 
 data:
