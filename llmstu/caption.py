@@ -167,8 +167,13 @@ def run(
     cfg: CaptionConfig,
     resume: bool = True,
     limit: Optional[int] = None,
+    cap=None,
 ) -> Path:
-    """Read crops_manifest.jsonl, caption each crop, append to out_path JSONL."""
+    """Read crops_manifest.jsonl, caption each crop, append to out_path JSONL.
+
+    Pass a preloaded `cap` (from load_captioner) to reuse one model across many
+    calls (e.g. a shard-by-shard loop) instead of reloading it each time.
+    """
     manifest_path, crops_root, out_path = Path(manifest_path), Path(crops_root), Path(out_path)
     rows = [json.loads(l) for l in manifest_path.open() if l.strip()]
     if limit:
@@ -184,7 +189,8 @@ def run(
     rows = [r for r in rows if r["crop_path"] not in done]
     print(f"[caption] {len(rows)} crops to label with {cfg.model_id} ({cfg.backend})")
 
-    cap = load_captioner(cfg)
+    if cap is None:
+        cap = load_captioner(cfg)
     bs = cfg.batch_size if cfg.backend == "transformers" else max(cfg.batch_size, 64)
     with out_path.open("a") as of:
         for start in range(0, len(rows), bs):

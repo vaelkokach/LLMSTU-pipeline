@@ -137,6 +137,104 @@ def build_crops_dataset(crops_dir: Path, labels_jsonl: Path, out_dir: Path,
     return crops_out, n
 
 
+# --------------------------------------------------------------------------- #
+# Per-shard streaming (process + upload one shard at a time, resumable)
+# --------------------------------------------------------------------------- #
+def ensure_repo(repo_id: str, token: Optional[str] = None, private: bool = True):
+    from huggingface_hub import HfApi
+    HfApi(token=token).create_repo(repo_id, repo_type="dataset",
+                                   private=private, exist_ok=True)
+
+
+def shard_done(repo_id: str, shard: str, token: Optional[str] = None) -> bool:
+    """True if _done/<shard> marker exists in the crops repo (shard fully uploaded)."""
+    from huggingface_hub import HfApi
+    try:
+        return HfApi(token=token).file_exists(repo_id, f"_done/{shard}", repo_type="dataset")
+    except Exception:
+        return False
+
+
+def mark_shard_done(repo_id: str, shard: str, token: Optional[str] = None):
+    import io
+    from huggingface_hub import HfApi
+    HfApi(token=token).upload_file(
+        path_or_fileobj=io.BytesIO(b"done"), path_in_repo=f"_done/{shard}",
+        repo_id=repo_id, repo_type="dataset")
+
+
+def stage_shard(crops_dir: Path, labels_jsonl: Path, stage: Path,
+                shard_name: str, shard_size: int = 5000) -> int:
+    """Lay out one shard's crops + labels for upload:
+        stage/crops/<shard>/part_000/*.jpg   (<=shard_size each)
+        stage/labels/<shard>.jsonl           (label rows + repo-relative file_name)
+    Returns number of crops staged.
+    """
+    import shutil
+    crops_dir, labels_jsonl, stage = Path(crops_dir), Path(labels_jsonl), Path(stage)
+    rows = [json.loads(l) for l in labels_jsonl.open() if l.strip()]
+    imgs = {p.name: p for p in crops_dir.glob("**/*.jpg")}
+    cdir = stage / "crops" / shard_name
+    ldir = stage / "labels"
+    cdir.mkdir(parents=True, exist_ok=True)
+    ldir.mkdir(parents=True, exist_ok=True)
+    out_rows, n = [], 0
+    for r in rows:
+        name = Path(r["crop_path"]).name
+        src = imgs.get(name)
+        if src is None:
+            continue
+        part = "part_%03d" % (n // shard_size)
+        d = cdir / part
+        d.mkdir(exist_ok=True)
+        shutil.copy(src, d / name)
+        out_rows.append({**r, "file_name": f"{shard_name}/{part}/{name}"})
+        n += 1
+    with (ldir / f"{shard_name}.jsonl").open("w") as f:
+        for r in out_rows:
+            f.write(json.dumps(r) + "\n")
+    return n
+
+
+def upload_dir(local_dir: Path, repo_id: str, token: Optional[str] = None):
+    """Add a staged folder to the crops repo (resumable, skips unchanged files)."""
+    from huggingface_hub import HfApi
+    HfApi(token=token).upload_large_folder(
+        folder_path=str(local_dir), repo_id=repo_id, repo_type="dataset")
+
+
+def gather_labels(repo_id: str, out_jsonl: Path, token: Optional[str] = None) -> int:
+    """Download every labels/<shard>.jsonl and concatenate into one file."""
+    from huggingface_hub import HfApi, hf_hub_download
+    api = HfApi(token=token)
+    files = [f for f in api.list_repo_files(repo_id, repo_type="dataset")
+             if f.startswith("labels/") and f.endswith(".jsonl")]
+    out_jsonl = Path(out_jsonl)
+    out_jsonl.parent.mkdir(parents=True, exist_ok=True)
+    n = 0
+    with out_jsonl.open("w") as out:
+        for f in files:
+            p = hf_hub_download(repo_id, f, repo_type="dataset", token=token)
+            for line in open(p):
+                if line.strip():
+                    out.write(line if line.endswith("\n") else line + "\n")
+                    n += 1
+    print(f"[io] gathered {n} labels from {len(files)} shards -> {out_jsonl}")
+    return n
+
+
+def fetch_crops(repo_id: str, file_names, dest: Path, token: Optional[str] = None) -> dict:
+    """Download specific crop files (crops/<file_name>) from the repo. Returns {file_name: local_path}."""
+    from huggingface_hub import hf_hub_download
+    dest = Path(dest); dest.mkdir(parents=True, exist_ok=True)
+    out = {}
+    for fn in file_names:
+        p = hf_hub_download(repo_id, f"crops/{fn}", repo_type="dataset",
+                            token=token, local_dir=str(dest))
+        out[fn] = p
+    return out
+
+
 def upload_dataset(local_dir: Path, repo_id: str, token: Optional[str] = None,
                    private: bool = True) -> str:
     """Create (if needed) and upload the enhanced dataset repo (resumable)."""

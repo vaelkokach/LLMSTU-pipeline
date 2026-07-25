@@ -24,12 +24,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from llmstu.config import load
-from llmstu import schema
-
-
-def _conf(r):
-    c = r.get(schema.MODEL_CONFIDENCE_FIELD)
-    return c if isinstance(c, (int, float)) else None
+from llmstu import schema, sampling
 
 
 def main():
@@ -52,46 +47,10 @@ def main():
     cfg = load(args.config)
     n_total = args.n or cfg.eval.n_samples
     fields = [f.strip() for f in args.stratify_fields.split(",") if f.strip()]
-    random.seed(cfg.eval.seed)
 
     rows = [json.loads(l) for l in Path(args.labels).open() if l.strip()]
-    idx = list(range(len(rows)))
-    n_hard = int(args.hard_frac * n_total)
-    n_repr = n_total - n_hard
-
-    # 1. representative: per-class floor across each stratify field
-    selected = set()
-    for f in fields:
-        buckets = defaultdict(list)
-        for i in idx:
-            buckets[str(rows[i].get(f))].append(i)
-        for _, items in buckets.items():
-            random.shuffle(items)
-            selected.update(items[:args.min_per_class])
-    if len(selected) > n_repr:
-        print(f"[eval] note: per-class floors give {len(selected)} > n_repr {n_repr}; "
-              f"keeping all floor picks for coverage.")
-    # fill up to n_repr with random extras
-    remaining = [i for i in idx if i not in selected]
-    random.shuffle(remaining)
-    while len(selected) < n_repr and remaining:
-        selected.add(remaining.pop())
-    repr_idx = set(selected)
-
-    # 2. hard: lowest model_confidence not already chosen
-    scored = sorted(((_conf(rows[i]), i) for i in idx
-                     if i not in repr_idx and _conf(rows[i]) is not None),
-                    key=lambda x: x[0])
-    hard_idx = set(i for _, i in scored[:n_hard])
-    if len(hard_idx) < n_hard:  # not enough confidence-scored rows -> fill random
-        pool = [i for i in idx if i not in repr_idx and i not in hard_idx]
-        random.shuffle(pool)
-        while len(hard_idx) < n_hard and pool:
-            hard_idx.add(pool.pop())
-
-    picks = ([(i, "representative") for i in repr_idx]
-             + [(i, "hard") for i in hard_idx])
-    random.shuffle(picks)
+    picks = sampling.select(rows, n_total, fields, args.min_per_class,
+                            args.hard_frac, seed=cfg.eval.seed)
 
     out = Path(args.out)
     img_dir = out / "images"
