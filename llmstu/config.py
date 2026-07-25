@@ -29,6 +29,8 @@ class CropConfig:
     # --- pose-based, quality-gated cropping (recommended) ---
     use_pose: bool = True                # crop from head keypoints -> guarantees a head in-frame
     pose_model: str = "yolo11m-pose.pt"  # ultralytics pose model
+    down_extend: float = 2.5             # how far below shoulders to extend (x head span) ->
+                                         #   include hands/desk/phone (raise for more, capped at person box)
     kpt_conf: float = 0.35               # min confidence for a keypoint to count
     min_head_kpts: int = 1               # require >=this many head keypoints (nose/eyes/ears)
     min_face_kpts: int = 2               # require >=this many FACE keypoints (nose/eyes) ->

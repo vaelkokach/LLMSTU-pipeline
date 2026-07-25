@@ -101,10 +101,15 @@ def _crop_pose(img, res, cfg, stats) -> List[Tuple[Image.Image, Dict]]:
         if head_span < cfg.min_native_px:                       # too far/small -> pixelated
             stats["too_far"] = stats.get("too_far", 0) + 1
             continue
-        pw = cfg.margin_frac * (hx2 - hx1 + 1)
-        ph = cfg.margin_frac * (hy2 - hy1 + 1)
-        box = (max(0, int(hx1 - pw)), max(0, int(hy1 - ph * 1.6)),
-               min(W, int(hx2 + pw)), min(H, int(hy2 + ph * 1.4)))
+        vspan = max(hy2 - hy1, head_span)                        # vertical unit (head->shoulders)
+        px1, py1, px2, py2 = boxes[i]                            # this person's full box
+        pw = cfg.margin_frac * (hx2 - hx1 + 1)                   # side padding (widen for hands)
+        top = hy1 - cfg.margin_frac * vspan * 1.6               # a little above the head
+        # extend DOWN toward desk/lap so hands + phone are visible, but never past
+        # this student's own person box (avoids grabbing the row behind).
+        bottom = min(hy2 + cfg.down_extend * vspan, py2)
+        box = (max(0, int(hx1 - pw)), max(0, int(top)),
+               min(W, int(hx2 + pw)), min(H, int(bottom)))
         meta = {"person_idx": int(i),
                 "bbox_person": [float(v) for v in boxes[i]],
                 "det_conf": float(confs[i]),
