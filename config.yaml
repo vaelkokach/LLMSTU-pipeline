@@ -29,14 +29,14 @@ caption:
   # Qwen3.5 = natively multimodal; weights run ON the GPU (no inference API).
   # 27B in bf16 ~= 54GB, leaving ~40GB for big batches -> NO 4-bit needed.
   model_id: Qwen/Qwen3.5-27B
-  backend: vllm          # transformers (simple) | vllm (fastest full run)
+  backend: transformers  # vLLM needs CUDA 13 (Colab is CUDA 12) -> use transformers on Colab
   dtype: bfloat16
   load_in_4bit: false            # keep false on 95GB: full bf16 is higher quality + faster
-  attn_implementation: flash_attention_2   # big card: use flash-attn (fallback: sdpa)
+  attn_implementation: sdpa      # sdpa works on Colab cu12 (flash-attn build is too slow)
   prompt_name: v2_concise     # v1_structured | v2_concise | v3_reasoned | v4_fewshot
   enable_thinking: false         # false = skip <think> so the model emits JSON directly
   max_new_tokens: 512            # headroom in case the model still reasons a little
-  batch_size: 32                 # ~40GB headroom; push toward 48-64 while watching nvidia-smi
+  batch_size: 48                 # big batches recover throughput without vLLM; push 64 if VRAM allows
   max_pixels: 802816             # = 1024*28*28; >512px crop area, so 512 crops stay full
   temperature: 0.0
   vllm_gpu_mem_util: 0.82        # let vLLM use most of the 95GB
