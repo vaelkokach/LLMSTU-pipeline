@@ -32,6 +32,41 @@ def download_frames(repo_id: str, subdir: str, dest: Path,
     return Path(local) / subdir
 
 
+def list_bucket(bucket_id: str, prefix: Optional[str] = None,
+                token: Optional[str] = None):
+    """Print + return the files in an HF Storage Bucket (to find your zip's path)."""
+    from huggingface_hub import list_bucket_tree
+    items = list(list_bucket_tree(bucket_id, prefix=prefix, recursive=True, token=token))
+    for it in items:
+        name = getattr(it, "path", None) or getattr(it, "name", str(it))
+        size = getattr(it, "size", "")
+        print(f"  {name}  {size}")
+    return items
+
+
+def download_bucket_zip(bucket_id: str, zip_name: str, dest: Path,
+                        token: Optional[str] = None, keep_zip: bool = False) -> Path:
+    """Download ONE zip from a bucket (single request) and extract it. Returns the
+    directory containing the extracted frames."""
+    import zipfile
+    from huggingface_hub import download_bucket_files
+
+    dest = Path(dest)
+    dest.mkdir(parents=True, exist_ok=True)
+    local_zip = dest / Path(zip_name).name
+    if not local_zip.exists():
+        download_bucket_files(bucket_id, files=[(zip_name, str(local_zip))], token=token)
+    extract_dir = dest / "frames"
+    extract_dir.mkdir(exist_ok=True)
+    with zipfile.ZipFile(local_zip) as z:
+        z.extractall(extract_dir)
+    if not keep_zip:
+        local_zip.unlink(missing_ok=True)   # free disk (35GB)
+    n = sum(1 for _ in extract_dir.glob("**/*.jpg"))
+    print(f"[io] extracted {n} frames from {zip_name} -> {extract_dir}")
+    return extract_dir
+
+
 def hub_file_exists(repo_id: str, path: str, token: Optional[str] = None) -> bool:
     from huggingface_hub import HfApi
     try:
