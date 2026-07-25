@@ -63,10 +63,12 @@ def main():
     if not any(frames_dir.glob("**/*.jpg")):
         extracted = io.download_bucket_zip(args.bucket, args.zip, work / "bucket_dl", token=token)
         frames_dir = extracted
+    # recursive glob -> works whether the zip has one flat folder of images or nested dirs
     all_frames = sorted(frames_dir.glob("**/*.jpg"))
     print(f"[local] {len(all_frames)} frames on disk")
 
-    # 2. deterministic shard partition (sorted -> chunks of shard_size)
+    # 2. deterministic shard partition (sorted flat list -> chunks of shard_size).
+    #    The source zip can be a single folder of images; we shard it by position here.
     shards = {}
     for i, f in enumerate(all_frames):
         shards.setdefault("shard_%03d" % (i // shard_size), []).append(f)
