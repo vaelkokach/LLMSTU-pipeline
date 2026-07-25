@@ -32,6 +32,48 @@ def download_frames(repo_id: str, subdir: str, dest: Path,
     return Path(local) / subdir
 
 
+def hub_file_exists(repo_id: str, path: str, token: Optional[str] = None) -> bool:
+    from huggingface_hub import HfApi
+    try:
+        return HfApi(token=token).file_exists(repo_id, path, repo_type="dataset")
+    except Exception:
+        return False
+
+
+def upload_one_file(local: Path, path_in_repo: str, repo_id: str,
+                    token: Optional[str] = None):
+    from huggingface_hub import HfApi
+    api = HfApi(token=token)
+    api.create_repo(repo_id, repo_type="dataset", private=True, exist_ok=True)
+    api.upload_file(path_or_fileobj=str(local), path_in_repo=path_in_repo,
+                    repo_id=repo_id, repo_type="dataset")
+
+
+def make_shard_tar(frames_dir: Path, tar_path: Path) -> int:
+    """Tar all .jpg in frames_dir (flat, arcname = filename). Returns file count."""
+    import tarfile
+    frames_dir, tar_path = Path(frames_dir), Path(tar_path)
+    tar_path.parent.mkdir(parents=True, exist_ok=True)
+    files = sorted(frames_dir.glob("**/*.jpg"))
+    with tarfile.open(tar_path, "w") as tf:
+        for f in files:
+            tf.add(f, arcname=f.name)
+    return len(files)
+
+
+def download_frames_tar(repo_id: str, tar_subdir: str, shard: str, dest: Path,
+                        token: Optional[str] = None) -> Path:
+    """Download ONE shard tar (1 request) and extract it. Returns the frames dir."""
+    import tarfile
+    from huggingface_hub import hf_hub_download
+    p = hf_hub_download(repo_id, f"{tar_subdir}/{shard}.tar", repo_type="dataset", token=token)
+    out = Path(dest) / shard
+    out.mkdir(parents=True, exist_ok=True)
+    with tarfile.open(p) as t:
+        t.extractall(out)
+    return out
+
+
 def download_frame_sample(repo_id: str, subdir: str, dest: Path, n: int = 40,
                           token: Optional[str] = None,
                           shard: Optional[str] = None,

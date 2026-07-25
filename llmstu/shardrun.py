@@ -40,10 +40,15 @@ def process_one(cfg: Config, shard: str, crops_repo: str, token: Optional[str],
     for f in (manifest, manifest_dedup, labels):
         f.unlink(missing_ok=True)
 
-    # 1. download just this shard's frames
-    frames_root = io.download_frames(cfg.data.source_repo, cfg.data.source_subdir,
-                                     frames_dl, token=token, shards=[shard])
-    shard_dir = frames_root / shard
+    # 1. get this shard's frames: one tar (fast, rate-limit-safe) or 5000 files
+    if cfg.data.use_tar_frames:
+        tar_repo = cfg.data.frames_tar_repo or cfg.data.source_repo
+        shard_dir = io.download_frames_tar(tar_repo, cfg.data.frames_tar_subdir,
+                                           shard, frames_dl, token=token)
+    else:
+        frames_root = io.download_frames(cfg.data.source_repo, cfg.data.source_subdir,
+                                         frames_dl, token=token, shards=[shard])
+        shard_dir = frames_root / shard
 
     # 2. crop (pose + quality gates)
     crop_mod.run(io.iter_frames(shard_dir, "*.jpg"), crops, cfg.crop,

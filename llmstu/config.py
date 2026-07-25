@@ -69,6 +69,10 @@ class DataConfig:
     workdir: str = "./work"
     frames_glob: str = "**/*.jpg"
     upload_shard_size: int = 5000               # crops per shard folder on upload (<10k HF limit)
+    # tar-packed frames (1 file/shard instead of 5000 -> avoids HF rate limits)
+    use_tar_frames: bool = False                # True once you've run scripts/15_repack_frames.py
+    frames_tar_repo: str = ""                   # default = source_repo
+    frames_tar_subdir: str = "frames_tar"       # where shard tars live in the repo
 
 
 @dataclass
