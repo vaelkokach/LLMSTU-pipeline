@@ -306,6 +306,34 @@ def upload_dir(local_dir: Path, repo_id: str, token: Optional[str] = None):
         folder_path=str(local_dir), repo_id=repo_id, repo_type="dataset")
 
 
+def load_local_labels(labels_dir: Path, crops_root: Optional[Path] = None) -> List[dict]:
+    """Read all shard label jsonl(s) and tag each row with the crops base dir to use.
+
+    Handles the per-shard-folder layout (D:/LLMSTU/shard_XXX/labels/*.jsonl with a
+    sibling D:/LLMSTU/shard_XXX/crops/), the merged layout (labels/ + crops/), and a
+    single jsonl + explicit --crops-root. Each returned row gets r["_crops_base"];
+    the crop image is then (_crops_base / file_name).
+    """
+    lp = Path(labels_dir)
+    files = [lp] if lp.is_file() else sorted(lp.glob("**/*.jsonl"))
+    out: List[dict] = []
+    for f in files:
+        frows = [json.loads(l) for l in f.open() if l.strip()]
+        if not frows:
+            continue
+        fn0 = frows[0].get("file_name") or Path(frows[0].get("crop_path", "")).name
+        candidates = [f.parent.parent / "crops", f.parent / "crops"]
+        if crops_root:
+            candidates.append(Path(crops_root))
+        candidates += [f.parent.parent, f.parent]
+        base = next((c for c in candidates if fn0 and (c / fn0).exists()), None)
+        base = str(base) if base else (str(crops_root) if crops_root else "")
+        for r in frows:
+            r["_crops_base"] = base
+            out.append(r)
+    return out
+
+
 def list_repo_zips(repo_id: str, token: Optional[str] = None):
     from huggingface_hub import HfApi
     return sorted(f for f in HfApi(token=token).list_repo_files(repo_id, repo_type="dataset")

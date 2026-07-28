@@ -18,25 +18,29 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from llmstu.config import load
-from llmstu import schema, sampling
+from llmstu import schema, sampling, dataset_io as io
 
 
-def _resolve(crops_root: Path, row):
+def _resolve(row):
+    base = Path(row.get("_crops_base", ""))
     fn = row.get("file_name")
-    if fn and (crops_root / fn).exists():
-        return crops_root / fn
+    if fn and base and (base / fn).exists():
+        return base / fn
     name = Path(row.get("crop_path", fn or "")).name
-    hits = list(crops_root.glob(f"**/{name}"))          # fallback: find by basename
-    return hits[0] if hits else None
+    if base:
+        hits = list(base.glob(f"**/{name}"))            # fallback: find by basename
+        if hits:
+            return hits[0]
+    return None
 
 
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--config", default="config.yaml")
     ap.add_argument("--labels-dir", required=True,
-                    help="dir containing shard_*.jsonl (or a single .jsonl file)")
-    ap.add_argument("--crops-root", required=True,
-                    help="local crops root (contains shard_XXX/part_XXX/*.jpg)")
+                    help="top folder holding the shard label jsonl(s) (searched recursively)")
+    ap.add_argument("--crops-root", default=None,
+                    help="optional; crops are auto-found next to each labels file if omitted")
     ap.add_argument("--out", default="./labeling")
     ap.add_argument("--n", type=int, default=None)
     ap.add_argument("--stratify-fields", default="engagement_level,activity,gaze_direction")
@@ -47,14 +51,9 @@ def main():
     cfg = load(args.config)
     n_total = args.n or cfg.eval.n_samples
     fields = [f.strip() for f in args.stratify_fields.split(",") if f.strip()]
-    crops_root = Path(args.crops_root)
 
-    lp = Path(args.labels_dir)
-    files = [lp] if lp.is_file() else sorted(lp.glob("**/*.jsonl"))
-    rows = []
-    for f in files:
-        rows += [json.loads(l) for l in f.open() if l.strip()]
-    print(f"[golden] {len(rows)} labels from {len(files)} file(s)")
+    rows = io.load_local_labels(args.labels_dir, args.crops_root)
+    print(f"[golden] {len(rows)} labels loaded")
 
     picks = sampling.select(rows, n_total, fields, args.min_per_class,
                             args.hard_frac, seed=cfg.eval.seed)
@@ -63,7 +62,7 @@ def main():
     data, missing = [], 0
     for k, (i, group) in enumerate(picks):
         r = rows[i]
-        p = _resolve(crops_root, r)
+        p = _resolve(r)
         if p is None:
             missing += 1
             continue
