@@ -55,7 +55,12 @@ def download_bucket_zip(bucket_id: str, zip_name: str, dest: Path,
     dest.mkdir(parents=True, exist_ok=True)
     local_zip = dest / Path(zip_name).name
     if not local_zip.exists():
-        download_bucket_files(bucket_id, files=[(zip_name, str(local_zip))], token=token)
+        download_bucket_files(bucket_id, files=[(zip_name, str(local_zip))],
+                              token=token, raise_on_missing_files=True)
+    if not local_zip.exists():
+        raise FileNotFoundError(
+            f"'{zip_name}' was not downloaded from bucket '{bucket_id}'. "
+            f"Check the exact path with: python scripts/16_run_local.py --bucket {bucket_id} --list")
     extract_dir = dest / "frames"
     extract_dir.mkdir(exist_ok=True)
     with zipfile.ZipFile(local_zip) as z:
@@ -299,6 +304,23 @@ def upload_dir(local_dir: Path, repo_id: str, token: Optional[str] = None):
     from huggingface_hub import HfApi
     HfApi(token=token).upload_large_folder(
         folder_path=str(local_dir), repo_id=repo_id, repo_type="dataset")
+
+
+def list_repo_zips(repo_id: str, token: Optional[str] = None):
+    from huggingface_hub import HfApi
+    return sorted(f for f in HfApi(token=token).list_repo_files(repo_id, repo_type="dataset")
+                  if f.endswith(".zip"))
+
+
+def download_repo_file(repo_id: str, path_in_repo: str, token: Optional[str] = None) -> str:
+    from huggingface_hub import hf_hub_download
+    return hf_hub_download(repo_id, path_in_repo, repo_type="dataset", token=token)
+
+
+def delete_repo_file(repo_id: str, path_in_repo: str, token: Optional[str] = None):
+    from huggingface_hub import HfApi
+    HfApi(token=token).delete_file(path_in_repo=path_in_repo, repo_id=repo_id,
+                                   repo_type="dataset")
 
 
 def gather_labels(repo_id: str, out_jsonl: Path, token: Optional[str] = None) -> int:
