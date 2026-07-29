@@ -42,8 +42,10 @@
   <span class="sp"></span>
   <button id="prev">← Prev</button>
   <button id="next" class="primary">Next →</button>
+  <button id="loadProg">Load progress</button>
   <button id="clearAll">Reset progress</button>
   <button id="export" class="good">Export golden.json</button>
+  <input type="file" id="progFile" accept="application/json" style="display:none"/>
 </header>
 <div class="bar"><div id="progbar"></div></div>
 
@@ -185,6 +187,19 @@ $('#clearAll').onclick=()=>{
   if(!confirm('Clear all saved labels for THIS crop set and start fresh?'))return;
   localStorage.removeItem(saveKey());state.labels={};render();
 };
+// resume from a previously exported golden.json (merge its labels back in by id)
+$('#loadProg').onclick=()=>$('#progFile').click();
+$('#progFile').onchange=e=>{const f=e.target.files[0];if(!f)return;
+  f.text().then(t=>{
+    let g; try{g=JSON.parse(t)}catch(_){alert('Not valid JSON');return;}
+    const items=g.items||g; const byId={}; items.forEach(it=>{if(it&&it.id!=null)byId[it.id]=it;});
+    let n=0;
+    state.items.forEach(it=>{const gi=byId[it.id];if(!gi)return;
+      const gold=gi.golden||gi.pseudo||{};
+      state.labels[it.id]=Object.assign({},gold,{_status:gi.status||'edited'});n++;});
+    persist();render();
+    alert('Loaded progress for '+n+' crops.');
+  });};
 $('#file').onchange=e=>{const f=e.target.files[0];if(!f)return;
   f.text().then(t=>load(JSON.parse(t)));};
 // try to auto-load data.json sitting next to this file
