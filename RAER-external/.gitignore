@@ -11,3 +11,8 @@ __pycache__/
 *.pt
 data/
 raer_data/
+
+# Working data + review payloads. Contains RAER media derivatives
+# (data.json embeds frames as base64) — must never be committed.
+Outputs/
+*.zip
