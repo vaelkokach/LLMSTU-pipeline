@@ -32,32 +32,62 @@ that produced each run.
 | stage | what | new code? |
 |---|---|---|
 | **00 audit** | inventory, subject identity, class balance, split, leakage | yes — `raer/audit.py` |
-| **01 frames** | clip → N sampled frames, written as an LLMSTU-format manifest | yes — `raer/frames.py` |
+| **06 split** | subject-disjoint train/test — the shipped one leaks | yes — `raer/split.py` |
+| **01 frames** | clip → 8 sampled frames, as an LLMSTU-format manifest | yes — `raer/frames.py` |
 | **02 label** | pseudo-label the frames | no — `llmstu.caption.run()` |
 | **03 aggregate** | frame cue labels → one verdict per clip | yes — `raer/aggregate.py` |
-| **04 golden** | sample 100–200 clips for human audit, stratified over RAER's label | `llmstu.sampling` + a 3-way UI |
-| **05 compare** | RAER vs Qwen vs human — cross-tab, per-class, κ | yes — `raer/compare.py` |
+| **04 golden** | 200 clips for human audit, stratified over RAER's label | `llmstu.sampling` + a 3-way UI |
+| **05 compare** | RAER vs Qwen vs human — κ, cue lift, adjudication | yes — `raer/compare.py` |
 
-Only 00 is implemented so far. The rest wait on the audit gate.
+All implemented. Notebooks: `RAER_00_audit_colab.ipynb`, then
+`RAER_01_pipeline_colab.ipynb`.
 
-## Stage 00 — run it
+## What stage 00 found
 
-Manifest-only (no download, ~1 minute):
+Run on all 87,809 files via Kaggle's manifest — no download needed. Full detail in
+`DATA_PROVENANCE.md`; the load-bearing results:
+
+- **2,649 annotated clips**, exactly matching the paper. The mirror ships 2,669 mp4, so
+  20 are unannotated extras to drop.
+- **Label indices decoded**: `1 neutrality, 2 enjoyment, 3 confusion, 4 fatigue,
+  5 distraction`, recovered by matching class frequencies to the published
+  distribution — agreeing to **0.00pp**, which also proves this is the full set.
+- **`P###` is session-local.** Split on `identity_key`, never on `person`.
+- **The shipped split is not subject-disjoint**: zero clip overlap, but **132 of 141
+  subjects (93.6%) appear in both train and test**. Numbers from it are not comparable
+  to a subject-disjoint benchmark. `scripts/06_split.py` builds a replacement that is
+  disjoint, same 79.9/20.1 ratio, class balance within 0.29pp.
+- `output_annotation/*` is a third party's VLM captioning, not RAER labels.
+
+## Run it
 
 ```bash
 python scripts/00_audit.py --kaggle bearmn/raer-video-emotion-dataset --out ./work/audit
 ```
 
-Full copy, once downloaded:
-
 ```bash
-python scripts/00_audit.py --root /content/raer/RAER --out ./work/audit
+python scripts/06_split.py --annotations /content/raer --out ./work/split
 ```
 
-In Colab: `notebooks/RAER_00_audit_colab.ipynb`.
+```bash
+python scripts/01_frames.py --root /content/raer/RAER --out ./work
+```
 
-The report flags each finding as OK / UNVERIFIED / LEAKY. Resolve every non-OK line and
-record the outcome in `DATA_PROVENANCE.md` before moving to stage 01.
+```bash
+python scripts/02_label.py --llmstu ../LLMSTU-pipeline --out ./work --limit 96
+```
+
+```bash
+python scripts/03_aggregate.py --llmstu ../LLMSTU-pipeline --out ./work
+```
+
+```bash
+python scripts/04_golden.py --llmstu ../LLMSTU-pipeline --out ./work
+```
+
+```bash
+python scripts/05_compare.py --llmstu ../LLMSTU-pipeline --golden labeling/golden.json
+```
 
 ### What the audit will not do
 
