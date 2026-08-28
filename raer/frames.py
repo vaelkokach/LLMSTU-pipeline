@@ -131,7 +131,10 @@ def build(clips: Dict[str, Dict[str, Any]], media_root: Path, out_dir: Path,
             written: List[Path] = []
             source = ""
             if use_existing_frames and c.get("frames"):
-                srcs = [media_root / r for r in sorted(c["frames"])]
+                # sort NUMERICALLY — frames are 1.jpg, 2.jpg, ..., 10.jpg, so a
+                # lexicographic sort would put 10 before 2 and scramble time.
+                srcs = [media_root / r for r in
+                        sorted(c["frames"], key=naming.frame_number)]
                 srcs = [s for s in srcs if s.exists()]
                 if srcs:
                     picks = [srcs[i] for i in pick_indices(len(srcs), n_per_clip)]

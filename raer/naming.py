@@ -46,6 +46,51 @@ _LOOSE_RE = re.compile(
 # a trailing frame index appended to a clip stem, e.g. ..._012_frame_0007 / ..._012_0007
 _FRAME_SUFFIX_RE = re.compile(r"_(?:frame[_-]?)?\d+$", re.IGNORECASE)
 
+# The media is laid out as a directory hierarchy, not flat filenames:
+#   RAER/clips /<Session>/<Location>[/<ClassNNN>]/P<NNN>/<NNN>.mp4
+#   RAER/images/<Session>/<Location>[/<ClassNNN>]/P<NNN>/<NNN>/<k>.jpg
+# Only cached_features/ uses the flat underscore form. Both resolve to the same
+# clip_stem so the two views join.
+_PATH_RE = re.compile(
+    r"(?:^|/)(?P<session>Class|SelfStudy)/"
+    r"(?P<location>Classroom|Library|Laboratory|Dormitory)/"
+    r"(?:(?P<class_id>Class\d+)/)?"
+    r"P(?P<person>\d+)/"
+    r"(?P<clip>\d+)"
+    r"(?:/(?P<frame>\d+))?"
+    r"(?:\.[A-Za-z0-9]+)?$"
+)
+
+
+def parse_path(path: str) -> Optional[Dict[str, str]]:
+    """Parse the directory-hierarchy form. Returns the same shape as parse()."""
+    m = _PATH_RE.search(str(path).replace("\\", "/"))
+    if m is None:
+        return None
+    d = m.groupdict()
+    out = {
+        "session": d["session"],
+        "location": d["location"],
+        "class_id": d.get("class_id") or "",
+        "person": d["person"],
+        "clip": d["clip"],
+        "modality": "",
+        "frame": d.get("frame") or "",
+    }
+    out["clip_stem"] = clip_stem(out)
+    out["identity_key"] = identity_key(out)
+    return out
+
+
+def frame_number(path) -> int:
+    """Numeric frame index from a path like .../001/10.jpg.
+
+    Frames are named 1.jpg, 2.jpg, ... 10.jpg, so lexicographic sorting puts 10
+    before 2 and scrambles the temporal order. Always sort on this.
+    """
+    stem = Path(path).stem
+    return int(stem) if stem.isdigit() else -1
+
 
 def parse(stem: str, loose: bool = True) -> Optional[Dict[str, str]]:
     """Parse a clip stem into its fields, or None if it does not look like RAER."""
@@ -95,13 +140,29 @@ def identity_key(f: Dict[str, str]) -> str:
 def clip_key_from_path(path, root=None) -> Optional[str]:
     """Recover the clip stem from any artifact path (video, frame, feature).
 
-    Tries, in order: the path's own stem, the stem with a trailing frame index
-    stripped, then the parent directory name (frames are often foldered per clip).
+    Tries the directory-hierarchy form first (that is how the media actually
+    ships), then the flat underscore form used by cached_features/, then a
+    frame-index-stripped stem and the parent directory name.
     """
+    f = parse_path(path)
+    if f:
+        return f["clip_stem"]
     p = Path(path)
-    candidates = [p.stem, _FRAME_SUFFIX_RE.sub("", p.stem), p.parent.name]
-    for c in candidates:
+    for c in (p.stem, _FRAME_SUFFIX_RE.sub("", p.stem), p.parent.name):
         f = parse(c)
         if f:
             return f["clip_stem"]
+    return None
+
+
+def parse_any(path) -> Optional[Dict[str, str]]:
+    """parse_path() or parse() — whichever matches this artifact's naming."""
+    f = parse_path(path)
+    if f:
+        return f
+    p = Path(path)
+    for c in (p.stem, _FRAME_SUFFIX_RE.sub("", p.stem), p.parent.name):
+        f = parse(c)
+        if f:
+            return f
     return None

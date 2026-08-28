@@ -172,7 +172,7 @@ def index_clips(listing: Listing) -> Dict[str, Dict[str, Any]]:
         bucket = "videos" if ext in VIDEO_EXT else ("frames" if ext in IMAGE_EXT else "features")
         clips[key][bucket].append(rel)
         if clips[key]["fields"] is None:
-            clips[key]["fields"] = naming.parse(key)
+            clips[key]["fields"] = naming.parse_any(rel) or naming.parse(key)
     return {"clips": dict(clips), "unparsed": unparsed}
 
 
@@ -247,6 +247,67 @@ def class_distribution(labels: Dict[str, str]) -> Dict[str, Any]:
     return {"status": status, "n_labeled": n, "max_delta_pp": max_delta, "rows": rows}
 
 
+# --------------------------------------------------------------------------- #
+# RAER's own annotation format
+# --------------------------------------------------------------------------- #
+# `RAER/annotation/{train,test}.txt` ship one clip per line:
+#     RAER/images/Class/Classroom/Class009/P001/032 32 5
+#     <clip directory>  <n_frames>  <label index 1-5>
+# The index-to-class mapping is not documented anywhere in the copy, so we
+# recover it by matching observed class proportions against the published ones
+# (see infer_label_map) rather than assuming an order.
+_ANNOT_RE = re.compile(r"^(?P<path>\S+)\s+(?P<n_frames>\d+)\s+(?P<label>\d+)\s*$")
+
+
+def read_annotation(path: Path) -> List[Dict[str, Any]]:
+    """Parse a RAER annotation file. Returns [] if it is not in that format."""
+    rows = []
+    try:
+        text = Path(path).read_text(encoding="utf-8", errors="replace")
+    except OSError:
+        return []
+    for line in text.splitlines():
+        m = _ANNOT_RE.match(line.strip())
+        if not m:
+            continue
+        key = naming.clip_key_from_path(m.group("path"))
+        if key:
+            rows.append({"clip_stem": key,
+                         "n_frames": int(m.group("n_frames")),
+                         "label_idx": int(m.group("label"))})
+    return rows
+
+
+def infer_label_map(counts: Dict[int, int]) -> Dict[str, Any]:
+    """Recover label-index -> class name by matching published proportions.
+
+    The five published percentages (65.23 / 19.89 / 7.40 / 6.08 / 1.40) are far
+    apart, so rank-matching observed frequencies against them is unambiguous
+    *provided the observed frequencies actually match*. The max per-class
+    deviation is returned so a mapping built on a different subset is caught
+    rather than silently trusted.
+    """
+    n = sum(counts.values())
+    if not n:
+        return {"map": {}, "max_delta_pp": None,
+                "status": "UNVERIFIED — no labels to infer from"}
+    obs = sorted(counts.items(), key=lambda kv: -kv[1])
+    ref = sorted(PAPER["classes"].items(), key=lambda kv: -kv[1])
+    if len(obs) != len(ref):
+        return {"map": {}, "max_delta_pp": None,
+                "status": f"UNVERIFIED — {len(obs)} label values, expected {len(ref)}"}
+    mapping, deltas = {}, []
+    for (idx, c), (cls, pct) in zip(obs, ref):
+        mapping[idx] = cls
+        deltas.append(abs(100.0 * c / n - pct))
+    md = max(deltas)
+    status = (f"CONFIRMED — every class within {md:.2f}pp of the published "
+              f"distribution" if md <= 0.5 else
+              f"AMBIGUOUS — deviates by up to {md:.2f}pp; this copy may be a "
+              f"different subset, do not trust the mapping")
+    return {"map": mapping, "max_delta_pp": md, "status": status}
+
+
 def find_labels(root: Path) -> Dict[str, str]:
     """Best-effort recovery of clip -> fine-grained label from whatever ships.
 
@@ -254,6 +315,18 @@ def find_labels(root: Path) -> Dict[str, str]:
     records, or a whitespace/comma separated `path label` text file. Returns {}
     when nothing recognisable is present — which is itself an audit finding.
     """
+    # 1) RAER's own `<clip> <n_frames> <idx>` annotation files, if present.
+    annot: List[Dict[str, Any]] = []
+    for p in Path(root).rglob("*.txt"):
+        annot.extend(read_annotation(p))
+    if annot:
+        by_clip = {r["clip_stem"]: r["label_idx"] for r in annot}
+        inferred = infer_label_map(Counter(by_clip.values()))
+        if inferred["map"]:
+            print(f"[audit] label map {inferred['map']} — {inferred['status']}")
+            return {k: inferred["map"][v] for k, v in by_clip.items()}
+
+    # 2) fall back to any file that names the classes in words.
     labels: Dict[str, str] = {}
     known = set(PAPER["classes"]) | set(PAPER["coarse_map"].values())
     for p in Path(root).rglob("*"):
@@ -320,6 +393,9 @@ def find_splits(root: Path) -> Dict[str, List[str]]:
             text = p.read_text(encoding="utf-8", errors="replace")
         except OSError:
             continue
+        # `train_subset.txt` etc. are auxiliary lists, not the split itself
+        if re.search(r"subset|sampled|description", p.stem, re.I):
+            continue
         keys = []
         for line in text.splitlines():
             tok = re.split(r"[,\t ]+", line.strip())[0]
@@ -339,17 +415,28 @@ def split_check(splits: Dict[str, List[str]]) -> Dict[str, Any]:
     names = sorted(splits)
     out: Dict[str, Any] = {"status": f"found: {', '.join(f'{k}={len(v)}' for k, v in splits.items())}",
                            "clip_overlaps": {}, "identity_overlaps": {}}
+    out["identity_overlap_pct"] = {}
     for i, a in enumerate(names):
         for b in names[i + 1:]:
             sa, sb = set(splits[a]), set(splits[b])
             out["clip_overlaps"][f"{a}&{b}"] = len(sa & sb)
             ia = {naming.parse(k)["identity_key"] for k in sa if naming.parse(k)}
             ib = {naming.parse(k)["identity_key"] for k in sb if naming.parse(k)}
-            out["identity_overlaps"][f"{a}&{b}"] = len(ia & ib)
-    leaks = [k for k, v in out["identity_overlaps"].items() if v > 0]
-    out["verdict"] = ("SUBJECT-DISJOINT" if not leaks else
-                      f"LEAKY — subjects shared across {', '.join(leaks)}; "
-                      f"do not report numbers on this split")
+            shared, total = len(ia & ib), len(ia | ib)
+            out["identity_overlaps"][f"{a}&{b}"] = shared
+            out["identity_overlap_pct"][f"{a}&{b}"] = (
+                round(100.0 * shared / total, 1) if total else 0.0)
+    leaks = {k: v for k, v in out["identity_overlaps"].items() if v > 0}
+    if not leaks:
+        out["verdict"] = "SUBJECT-DISJOINT — safe to report numbers on this split"
+    else:
+        worst = max(out["identity_overlap_pct"].values())
+        out["verdict"] = (
+            f"LEAKY — the shipped split has zero clip overlap but shares subjects: "
+            f"{', '.join(f'{k} {v}' for k, v in leaks.items())} "
+            f"({worst}% of identities appear on both sides). A model can memorise a "
+            f"face in training and be scored on it at test. Numbers from this split "
+            f"are not comparable to a subject-disjoint benchmark — build our own.")
     return out
 
 

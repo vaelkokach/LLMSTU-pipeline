@@ -71,16 +71,84 @@ Contents (100.35 GB, 87,809 files, from Kaggle's file manifest):
 | `.json` | 2 | 13.2 MB | columns `caption`, `image_path` |
 | `.csv` | 1 | **20 bytes** | header only, empty |
 
-Naming convention observed in `cached_features/`:
+### Actual layout (audited 2026-08-28, all 87,809 files)
 
 ```
-RAER_images_SelfStudy_Laboratory_P040_012
-RAER_images_Class_Classroom_Class002_P001_021
+RAER/clips /<Session>/<Location>[/<ClassNNN>]/P<NNN>/<NNN>.mp4     2,669
+RAER/images/<Session>/<Location>[/<ClassNNN>]/P<NNN>/<NNN>/<k>.jpg 82,488
+RAER/cached_features/RAER_images_<Session>_..._P<NNN>_<NNN>.pt      2,640
+RAER/annotation/{train,test,train_subset}.txt                           3
+RAER/bounding_box/{body,face}.json                                      2
+RAER/output_annotation/*.txt|csv                                        7
 ```
 
-→ modality, session type, environment, class id (classroom only), person index,
-clip index. **`P###` is presumed session-local, not a global subject id** — see
-`raer/audit.py`, which tests this rather than assuming it.
+Only `cached_features/` uses the flat underscore naming; the media is a directory
+hierarchy. Frame files are `1.jpg, 2.jpg, … 10.jpg` — **numeric, so they must be
+sorted numerically**, or temporal order is scrambled.
+
+## Audit findings (stage 00, Kaggle copy, 2026-08-28)
+
+### Annotation format — recovered
+
+`RAER/annotation/{train,test}.txt`, one clip per line:
+
+```
+RAER/images/Class/Classroom/Class009/P001/032 32 5
+<clip directory>  <n_frames>  <label index 1-5>
+```
+
+**train 2,121 + test 528 = 2,649** — exactly the paper's count. The mirror ships
+**2,669 mp4**, so **20 clips are unannotated extras**; they must be dropped, not
+labeled. 2,640 `cached_features` means 29 clips also lack a cached feature.
+
+### Label index mapping — recovered, not assumed
+
+Undocumented in the copy. Recovered by rank-matching observed class frequencies
+against the published percentages; **every class lands within 0.00pp**, so the
+mapping is unambiguous:
+
+| idx | class | n | observed | published |
+|---|---|---|---|---|
+| 1 | neutrality | 1,728 | 65.23% | 65.23% |
+| 2 | enjoyment | 161 | 6.08% | 6.08% |
+| 3 | confusion | 37 | 1.40% | 1.40% |
+| 4 | fatigue | 196 | 7.40% | 7.40% |
+| 5 | distraction | 527 | 19.89% | 19.89% |
+
+This also confirms the Kaggle copy is the **full RAER set, not a subset**.
+Confusion is 37 clips total — any per-class metric on it is near-anecdotal.
+
+### Subject identity — `P###` is session-local
+
+43 distinct `P###` values, but **25 of them appear under more than one
+session/location**, so the index resets per recording. Folding session + location
++ class into it gives **141 identity keys against the paper's 136 subjects** —
+close enough to be the right unit, with the small excess most likely a student
+recorded in both a class and a self-study session (which this key over-splits).
+**Never split on `person`; split on `identity_key`.**
+
+### ⚠ The shipped split is NOT subject-disjoint
+
+The split is 2,121 / 528 (79.9 / 20.1) and class-stratified to within 0.1pp — but:
+
+- clip overlap train ∩ test: **0**
+- identity overlap train ∩ test: **132 of 141 — 93.6%**
+
+The paper says it "strives to exclude overlapping individuals"; in this copy that
+plainly did not happen. Almost every subject appears on both sides, so a model can
+memorise a face in training and be scored on it at test.
+
+**Consequence:** numbers produced on the shipped split are not comparable to a
+subject-disjoint benchmark, including the paper's own reported UAR. We build our
+own split on `identity_key`, and any comparison against published numbers must
+state this. A naive clip-level random split is worse still — 18.9 clips per
+identity means it contaminates ~100% of the test set.
+
+### Not the labels
+
+`RAER/output_annotation/*.txt` are a **third party's VLM-generated captions**
+("The image features a young man wearing glasses…"), not RAER annotations, and
+`test_descriptions.csv` is a 20-byte header with no rows. Ignore all of it.
 
 **Every one of these points must be re-verified against the official copy once
 access is granted.** Any number reported from the interim source is provisional
@@ -91,3 +159,4 @@ and must be labelled as such.
 | date | event |
 |---|---|
 | 2026-08-28 | Access requested from authors; repo created; audit stage written |
+| 2026-08-28 | Stage 00 run on the Kaggle manifest: layout, annotation format and label map recovered; **shipped split found to leak 93.6% of subjects** |
