@@ -44,16 +44,33 @@ def _thumb(path: Path, width: int = THUMB_WIDTH) -> Optional[str]:
 
 
 def load_reviewed(path: Optional[Path]) -> Dict[str, str]:
-    """clip_stem -> status, for clips already reviewed in an earlier golden.json."""
-    if not path or not Path(path).exists():
+    """clip_stem -> status, for clips already reviewed in an earlier golden.json.
+
+    Asking to carry work forward and silently getting none is the worst outcome
+    here: the run looks fine and you re-review clips you already did. So a path
+    that was explicitly given but is missing or unreadable is an error, not a
+    shrug. Only `path is None` (the flag was not passed) means "no seeding".
+    """
+    if path is None:
         return {}
+    path = Path(path)
+    if not path.exists():
+        raise SystemExit(
+            f"--seed-golden {path} does not exist. Upload the earlier golden.json "
+            f"there first, or drop the flag if you meant to start fresh.")
     try:
-        data = json.loads(Path(path).read_text(encoding="utf-8"))
-    except Exception:
-        return {}
-    return {it["clip_stem"]: it.get("status", "")
-            for it in data.get("items", [])
-            if it.get("clip_stem") and it.get("status") in ("verified", "edited", "reviewed")}
+        data = json.loads(path.read_text(encoding="utf-8"))
+    except Exception as e:
+        raise SystemExit(f"--seed-golden {path} is not readable JSON: {e}")
+
+    reviewed = {it["clip_stem"]: it.get("status", "")
+                for it in data.get("items", [])
+                if it.get("clip_stem") and it.get("status") in ("verified", "edited", "reviewed")}
+    if not reviewed:
+        raise SystemExit(
+            f"--seed-golden {path} has {len(data.get('items', []))} items but none "
+            f"marked verified/edited/reviewed. Did you export before reviewing?")
+    return reviewed
 
 
 def build(clip_labels: Path, frames_dir: Path, out_dir: Path, schema, sampling,
