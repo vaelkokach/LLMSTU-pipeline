@@ -18,6 +18,7 @@ upper-body crop would remove.
 from __future__ import annotations
 
 import json
+from collections import Counter, defaultdict
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
@@ -36,6 +37,58 @@ def pick_indices(n_available: int, n_want: int) -> List[int]:
         return list(range(n_available))
     step = (n_available - 1) / (n_want - 1) if n_want > 1 else 0
     return [round(i * step) for i in range(n_want)]
+
+
+def pilot_subset(clips: Dict[str, Any], labels: Dict[str, str], n: int,
+                 seed: int = 13, min_per_class: int = 10) -> Dict[str, Any]:
+    """A small, class- and context-balanced subset for a validation run.
+
+    `--limit` takes the first N clips in sorted order, which is alphabetical and
+    would hand you 100% Class/Classroom and about two confusion clips. A pilot is
+    only useful if it exercises the things that might break, so this draws
+    proportionally per RAER class with a floor (confusion has 37 clips
+    dataset-wide and would otherwise vanish) and round-robins each class across
+    the learning environments.
+
+    Note the deliberate distortion: environments are spread evenly, not
+    proportionally, so Dormitory and SelfStudy/Classroom are over-represented
+    relative to the corpus. That is right for *validating* the labeler across
+    room types — and wrong for reporting numbers. Never quote a metric from a
+    pilot run; it exists to answer "is the labeler reading the right person, in
+    every kind of room" before the full pass.
+    """
+    import random
+
+    rng = random.Random(seed)
+    by_class: Dict[str, List[str]] = defaultdict(list)
+    for stem in clips:
+        by_class[labels.get(stem, "")].append(stem)
+
+    total_labeled = sum(len(v) for k, v in by_class.items() if k)
+    picked: List[str] = []
+    for cls, stems in sorted(by_class.items()):
+        if not cls:
+            continue  # unannotated extras have no place in a pilot
+        want = max(min_per_class, round(n * len(stems) / total_labeled)) if total_labeled else 0
+        want = min(want, len(stems))
+        # spread across environments so the pilot is not all one room
+        by_env: Dict[str, List[str]] = defaultdict(list)
+        for s in stems:
+            f = naming.parse(s)
+            by_env[f"{f['session']}/{f['location']}" if f else "?"].append(s)
+        for v in by_env.values():
+            rng.shuffle(v)
+        envs = sorted(by_env)
+        i = 0
+        while len([p for p in picked if labels.get(p) == cls]) < want and any(by_env.values()):
+            bucket = by_env[envs[i % len(envs)]]
+            if bucket:
+                picked.append(bucket.pop())
+            i += 1
+    rng.shuffle(picked)
+    print(f"[frames] pilot subset: {len(picked)} clips, "
+          f"{dict(Counter(labels.get(s, '') for s in picked))}")
+    return {k: clips[k] for k in picked}
 
 
 def _copy_frames(srcs: List[Path], clip_stem: str, out_dir: Path) -> List[Path]:

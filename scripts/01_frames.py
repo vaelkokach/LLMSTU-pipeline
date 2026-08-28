@@ -23,7 +23,10 @@ def main():
     ap.add_argument("--out", default="./work")
     ap.add_argument("--config", default="config.yaml")
     ap.add_argument("--n", type=int, default=None, help="override frames per clip")
-    ap.add_argument("--limit", type=int, default=None, help="only this many clips")
+    ap.add_argument("--limit", type=int, default=None,
+                    help="first N clips in sorted order (debug only - biased)")
+    ap.add_argument("--sample", type=int, default=None,
+                    help="stratified pilot subset of N clips (use this, not --limit)")
     args = ap.parse_args()
 
     cfg = labeler.load_config(args.config)
@@ -38,6 +41,10 @@ def main():
     if not labels:
         print("[01] WARNING: no labels recovered — stages 04/05 need them. "
               "Resolve this in the stage 00 report before a full run.")
+
+    if args.sample:
+        clips = frames.pilot_subset(clips, labels, args.sample,
+                                    seed=rc.get("seed", 13))
 
     mf = frames.build(clips, root, out / "frames", out / "manifest.jsonl",
                       n_per_clip=n,
