@@ -43,16 +43,51 @@ def _thumb(path: Path, width: int = THUMB_WIDTH) -> Optional[str]:
     return "data:image/jpeg;base64," + base64.b64encode(buf.getvalue()).decode()
 
 
+def load_reviewed(path: Optional[Path]) -> Dict[str, str]:
+    """clip_stem -> status, for clips already reviewed in an earlier golden.json."""
+    if not path or not Path(path).exists():
+        return {}
+    try:
+        data = json.loads(Path(path).read_text(encoding="utf-8"))
+    except Exception:
+        return {}
+    return {it["clip_stem"]: it.get("status", "")
+            for it in data.get("items", [])
+            if it.get("clip_stem") and it.get("status") in ("verified", "edited", "reviewed")}
+
+
 def build(clip_labels: Path, frames_dir: Path, out_dir: Path, schema, sampling,
           n_clips: int = 200, min_per_class: int = 25, hard_frac: float = 0.2,
           strip: int = 4, seed: int = 13,
-          stratify_by: str = "raer_label") -> Path:
-    """Write labeling/data.json for the three-way review UI."""
+          stratify_by: str = "raer_label",
+          seed_golden: Optional[Path] = None) -> Path:
+    """Write labeling/data.json for the three-way review UI.
+
+    `seed_golden` carries work forward from an earlier review (typically the pilot).
+    Those clips are force-included rather than left to chance: sampling 200 from
+    2,649 would re-draw only ~4 of a 60-clip pilot, throwing away the rest of the
+    human effort. Their pseudo-labels are unchanged between runs — temperature is
+    0.0 and frame selection is deterministic — so loading that golden.json in the
+    UI pre-fills them correctly.
+    """
     rows = [json.loads(l) for l in Path(clip_labels).open(encoding="utf-8") if l.strip()]
     if not rows:
         raise SystemExit(f"no clips in {clip_labels}")
 
-    picks = sampling.select(rows, n_clips, [stratify_by], min_per_class, hard_frac, seed=seed)
+    reviewed = load_reviewed(seed_golden)
+    seeded_idx = [i for i, r in enumerate(rows) if r["clip_stem"] in reviewed]
+    if seeded_idx:
+        print(f"[golden] carrying forward {len(seeded_idx)} already-reviewed clips "
+              f"from {seed_golden}")
+
+    rest = [r for i, r in enumerate(rows) if i not in set(seeded_idx)]
+    n_new = max(0, n_clips - len(seeded_idx))
+    picks = [(i, "seeded") for i in seeded_idx]
+    if n_new:
+        sub = sampling.select(rest, n_new, [stratify_by], min_per_class, hard_frac, seed=seed)
+        # sampling.select indexes into `rest`; remap onto `rows`
+        remap = {id(r): i for i, r in enumerate(rows)}
+        picks += [(remap[id(rest[j])], grp) for j, grp in sub]
 
     frames_dir = Path(frames_dir)
     out_dir = Path(out_dir)

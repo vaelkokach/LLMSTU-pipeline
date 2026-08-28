@@ -171,7 +171,11 @@ def adjudication(golden: Dict[str, Any], schema) -> Dict[str, Any]:
     res["cue_accuracy"] = sorted(
         [x for x in per_field if x["accuracy"] is not None], key=lambda x: x["accuracy"])
 
-    for gname in ("representative", "hard"):
+    # 'seeded' = carried forward from an earlier (pilot) review. Kept as its own
+    # group rather than folded into 'representative': the pilot deliberately
+    # flattened the environment mix, so those clips are not drawn from the corpus
+    # distribution and would bias the headline number.
+    for gname in ("representative", "hard", "seeded"):
         rows = [it for it in items if it.get("group") == gname]
         if not rows:
             continue

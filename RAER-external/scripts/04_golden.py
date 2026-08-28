@@ -21,6 +21,9 @@ def main():
     ap.add_argument("--labeling", default="./labeling")
     ap.add_argument("--config", default="config.yaml")
     ap.add_argument("--n", type=int, default=None)
+    ap.add_argument("--seed-golden", default=None,
+                    help="an earlier golden.json (e.g. the pilot) whose reviewed "
+                         "clips are force-included so that work is not redone")
     args = ap.parse_args()
 
     sys.path.insert(0, str(Path(args.llmstu).resolve()))
@@ -38,7 +41,8 @@ def main():
                  min_per_class=g.get("min_per_class", 25),
                  hard_frac=g.get("hard_frac", 0.2),
                  stratify_by=g.get("stratify_by", "raer_label"),
-                 seed=cfg.get("raer", {}).get("seed", 13))
+                 seed=cfg.get("raer", {}).get("seed", 13),
+                 seed_golden=Path(args.seed_golden) if args.seed_golden else None)
     print(f"[04] open {Path(args.labeling)/'index.html'} to review")
 
 
