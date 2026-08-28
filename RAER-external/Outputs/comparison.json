@@ -1,0 +1,1144 @@
+{
+ "n_clips": 2669,
+ "coarse": {
+  "n": 2649,
+  "raw_agreement": 0.8305,
+  "cohens_kappa": 0.3792,
+  "per_class_recall": {
+   "engaged": 0.9416,
+   "distracted": 0.3833
+  },
+  "matrix": {
+   "engaged": {
+    "distracted": 124,
+    "engaged": 1998
+   },
+   "distracted": {
+    "engaged": 325,
+    "distracted": 202
+   }
+  },
+  "note": "rows = RAER coarse, cols = ours. Raw agreement is inflated by the 65% neutrality prior; read kappa and per-class recall instead."
+ },
+ "cues": {
+  "classes": {
+   "neutrality": {
+    "n": 1728,
+    "fields": {
+     "activity": [
+      {
+       "value": "listening",
+       "pct": 38.0,
+       "baseline_pct": 36.3,
+       "lift": 1.05
+      },
+      {
+       "value": "using_laptop",
+       "pct": 20.7,
+       "baseline_pct": 18.3,
+       "lift": 1.13
+      },
+      {
+       "value": "reading",
+       "pct": 14.2,
+       "baseline_pct": 12.1,
+       "lift": 1.17
+      },
+      {
+       "value": "writing_notes",
+       "pct": 13.9,
+       "baseline_pct": 11.3,
+       "lift": 1.23
+      }
+     ],
+     "gaze_direction": [
+      {
+       "value": "own_desk",
+       "pct": 35.6,
+       "baseline_pct": 31.2,
+       "lift": 1.14
+      },
+      {
+       "value": "teacher_or_board",
+       "pct": 32.2,
+       "baseline_pct": 31.8,
+       "lift": 1.01
+      },
+      {
+       "value": "laptop",
+       "pct": 26.0,
+       "baseline_pct": 22.1,
+       "lift": 1.18
+      },
+      {
+       "value": "down",
+       "pct": 2.5,
+       "baseline_pct": 2.8,
+       "lift": 0.9
+      }
+     ],
+     "attention_target": [
+      {
+       "value": "own_work",
+       "pct": 36.7,
+       "baseline_pct": 32.5,
+       "lift": 1.13
+      },
+      {
+       "value": "instruction",
+       "pct": 31.8,
+       "baseline_pct": 31.2,
+       "lift": 1.02
+      },
+      {
+       "value": "device",
+       "pct": 27.4,
+       "baseline_pct": 29.3,
+       "lift": 0.94
+      },
+      {
+       "value": "distracted",
+       "pct": 3.8,
+       "baseline_pct": 5.8,
+       "lift": 0.65
+      }
+     ],
+     "engagement_level": [
+      {
+       "value": "engaged",
+       "pct": 90.9,
+       "baseline_pct": 82.8,
+       "lift": 1.1
+      },
+      {
+       "value": "partially_engaged",
+       "pct": 4.6,
+       "baseline_pct": 4.9,
+       "lift": 0.94
+      },
+      {
+       "value": "disengaged",
+       "pct": 4.5,
+       "baseline_pct": 12.3,
+       "lift": 0.37
+      }
+     ],
+     "posture": [
+      {
+       "value": "leaning_forward",
+       "pct": 51.4,
+       "baseline_pct": 51.7,
+       "lift": 0.99
+      },
+      {
+       "value": "upright",
+       "pct": 44.7,
+       "baseline_pct": 43.3,
+       "lift": 1.03
+      },
+      {
+       "value": "leaning_back",
+       "pct": 2.4,
+       "baseline_pct": 3.1,
+       "lift": 0.77
+      },
+      {
+       "value": "head_down",
+       "pct": 0.9,
+       "baseline_pct": 1.0,
+       "lift": 0.83
+      }
+     ],
+     "hand_state": [
+      {
+       "value": "unknown",
+       "pct": 34.6,
+       "baseline_pct": 35.1,
+       "lift": 0.98
+      },
+      {
+       "value": "on_desk_idle",
+       "pct": 23.9,
+       "baseline_pct": 21.7,
+       "lift": 1.1
+      },
+      {
+       "value": "on_face",
+       "pct": 23.7,
+       "baseline_pct": 22.0,
+       "lift": 1.08
+      },
+      {
+       "value": "writing",
+       "pct": 15.2,
+       "baseline_pct": 12.1,
+       "lift": 1.25
+      }
+     ],
+     "phone_visible": [
+      {
+       "value": "False",
+       "pct": 84.9,
+       "baseline_pct": 79.2,
+       "lift": 1.07
+      },
+      {
+       "value": "True",
+       "pct": 15.1,
+       "baseline_pct": 20.8,
+       "lift": 0.73
+      }
+     ],
+     "laptop_visible": [
+      {
+       "value": "False",
+       "pct": 55.4,
+       "baseline_pct": 57.4,
+       "lift": 0.97
+      },
+      {
+       "value": "True",
+       "pct": 44.6,
+       "baseline_pct": 42.6,
+       "lift": 1.05
+      }
+     ],
+     "talking": [
+      {
+       "value": "False",
+       "pct": 99.9,
+       "baseline_pct": 99.4,
+       "lift": 1.01
+      },
+      {
+       "value": "True",
+       "pct": 0.1,
+       "baseline_pct": 0.6,
+       "lift": 0.18
+      }
+     ],
+     "occluded": [
+      {
+       "value": "False",
+       "pct": 98.3,
+       "baseline_pct": 98.7,
+       "lift": 1.0
+      },
+      {
+       "value": "True",
+       "pct": 1.7,
+       "baseline_pct": 1.3,
+       "lift": 1.32
+      }
+     ]
+    }
+   },
+   "distraction": {
+    "n": 527,
+    "fields": {
+     "activity": [
+      {
+       "value": "using_phone",
+       "pct": 31.1,
+       "baseline_pct": 7.8,
+       "lift": 4.01
+      },
+      {
+       "value": "listening",
+       "pct": 28.3,
+       "baseline_pct": 36.3,
+       "lift": 0.78
+      },
+      {
+       "value": "reading",
+       "pct": 10.2,
+       "baseline_pct": 12.1,
+       "lift": 0.85
+      },
+      {
+       "value": "other",
+       "pct": 9.5,
+       "baseline_pct": 10.4,
+       "lift": 0.91
+      }
+     ],
+     "gaze_direction": [
+      {
+       "value": "phone",
+       "pct": 30.9,
+       "baseline_pct": 7.2,
+       "lift": 4.28
+      },
+      {
+       "value": "teacher_or_board",
+       "pct": 25.2,
+       "baseline_pct": 31.8,
+       "lift": 0.79
+      },
+      {
+       "value": "own_desk",
+       "pct": 23.7,
+       "baseline_pct": 31.2,
+       "lift": 0.76
+      },
+      {
+       "value": "laptop",
+       "pct": 8.5,
+       "baseline_pct": 22.1,
+       "lift": 0.39
+      }
+     ],
+     "attention_target": [
+      {
+       "value": "device",
+       "pct": 39.5,
+       "baseline_pct": 29.3,
+       "lift": 1.35
+      },
+      {
+       "value": "own_work",
+       "pct": 25.4,
+       "baseline_pct": 32.5,
+       "lift": 0.78
+      },
+      {
+       "value": "instruction",
+       "pct": 24.7,
+       "baseline_pct": 31.2,
+       "lift": 0.79
+      },
+      {
+       "value": "distracted",
+       "pct": 8.2,
+       "baseline_pct": 5.8,
+       "lift": 1.41
+      }
+     ],
+     "engagement_level": [
+      {
+       "value": "engaged",
+       "pct": 57.5,
+       "baseline_pct": 82.8,
+       "lift": 0.69
+      },
+      {
+       "value": "disengaged",
+       "pct": 38.3,
+       "baseline_pct": 12.3,
+       "lift": 3.11
+      },
+      {
+       "value": "partially_engaged",
+       "pct": 4.2,
+       "baseline_pct": 4.9,
+       "lift": 0.86
+      }
+     ],
+     "posture": [
+      {
+       "value": "leaning_forward",
+       "pct": 58.6,
+       "baseline_pct": 51.7,
+       "lift": 1.13
+      },
+      {
+       "value": "upright",
+       "pct": 34.0,
+       "baseline_pct": 43.3,
+       "lift": 0.78
+      },
+      {
+       "value": "leaning_back",
+       "pct": 4.6,
+       "baseline_pct": 3.1,
+       "lift": 1.48
+      },
+      {
+       "value": "head_down",
+       "pct": 2.3,
+       "baseline_pct": 1.0,
+       "lift": 2.17
+      }
+     ],
+     "hand_state": [
+      {
+       "value": "on_phone",
+       "pct": 30.6,
+       "baseline_pct": 7.6,
+       "lift": 4.0
+      },
+      {
+       "value": "unknown",
+       "pct": 26.4,
+       "baseline_pct": 35.1,
+       "lift": 0.75
+      },
+      {
+       "value": "on_face",
+       "pct": 17.3,
+       "baseline_pct": 22.0,
+       "lift": 0.79
+      },
+      {
+       "value": "on_desk_idle",
+       "pct": 15.9,
+       "baseline_pct": 21.7,
+       "lift": 0.73
+      }
+     ],
+     "phone_visible": [
+      {
+       "value": "False",
+       "pct": 53.7,
+       "baseline_pct": 79.2,
+       "lift": 0.68
+      },
+      {
+       "value": "True",
+       "pct": 46.3,
+       "baseline_pct": 20.8,
+       "lift": 2.23
+      }
+     ],
+     "laptop_visible": [
+      {
+       "value": "False",
+       "pct": 69.1,
+       "baseline_pct": 57.4,
+       "lift": 1.2
+      },
+      {
+       "value": "True",
+       "pct": 30.9,
+       "baseline_pct": 42.6,
+       "lift": 0.73
+      }
+     ],
+     "talking": [
+      {
+       "value": "False",
+       "pct": 99.6,
+       "baseline_pct": 99.4,
+       "lift": 1.0
+      },
+      {
+       "value": "True",
+       "pct": 0.4,
+       "baseline_pct": 0.6,
+       "lift": 0.6
+      }
+     ],
+     "occluded": [
+      {
+       "value": "False",
+       "pct": 100.0,
+       "baseline_pct": 98.7,
+       "lift": 1.01
+      }
+     ]
+    }
+   },
+   "fatigue": {
+    "n": 196,
+    "fields": {
+     "activity": [
+      {
+       "value": "listening",
+       "pct": 37.8,
+       "baseline_pct": 36.3,
+       "lift": 1.04
+      },
+      {
+       "value": "other",
+       "pct": 27.6,
+       "baseline_pct": 10.4,
+       "lift": 2.65
+      },
+      {
+       "value": "using_laptop",
+       "pct": 17.3,
+       "baseline_pct": 18.3,
+       "lift": 0.95
+      },
+      {
+       "value": "reading",
+       "pct": 7.1,
+       "baseline_pct": 12.1,
+       "lift": 0.59
+      }
+     ],
+     "gaze_direction": [
+      {
+       "value": "teacher_or_board",
+       "pct": 42.9,
+       "baseline_pct": 31.8,
+       "lift": 1.35
+      },
+      {
+       "value": "own_desk",
+       "pct": 24.5,
+       "baseline_pct": 31.2,
+       "lift": 0.78
+      },
+      {
+       "value": "laptop",
+       "pct": 17.9,
+       "baseline_pct": 22.1,
+       "lift": 0.81
+      },
+      {
+       "value": "unknown",
+       "pct": 9.7,
+       "baseline_pct": 1.4,
+       "lift": 6.99
+      }
+     ],
+     "attention_target": [
+      {
+       "value": "instruction",
+       "pct": 41.8,
+       "baseline_pct": 31.2,
+       "lift": 1.34
+      },
+      {
+       "value": "own_work",
+       "pct": 25.0,
+       "baseline_pct": 32.5,
+       "lift": 0.77
+      },
+      {
+       "value": "device",
+       "pct": 17.9,
+       "baseline_pct": 29.3,
+       "lift": 0.61
+      },
+      {
+       "value": "distracted",
+       "pct": 14.8,
+       "baseline_pct": 5.8,
+       "lift": 2.56
+      }
+     ],
+     "engagement_level": [
+      {
+       "value": "engaged",
+       "pct": 80.6,
+       "baseline_pct": 82.8,
+       "lift": 0.97
+      },
+      {
+       "value": "disengaged",
+       "pct": 13.8,
+       "baseline_pct": 12.3,
+       "lift": 1.12
+      },
+      {
+       "value": "partially_engaged",
+       "pct": 5.6,
+       "baseline_pct": 4.9,
+       "lift": 1.15
+      }
+     ],
+     "posture": [
+      {
+       "value": "upright",
+       "pct": 46.4,
+       "baseline_pct": 43.3,
+       "lift": 1.07
+      },
+      {
+       "value": "leaning_forward",
+       "pct": 44.4,
+       "baseline_pct": 51.7,
+       "lift": 0.86
+      },
+      {
+       "value": "leaning_back",
+       "pct": 5.1,
+       "baseline_pct": 3.1,
+       "lift": 1.66
+      },
+      {
+       "value": "unknown",
+       "pct": 3.6,
+       "baseline_pct": 0.7,
+       "lift": 5.02
+      }
+     ],
+     "hand_state": [
+      {
+       "value": "unknown",
+       "pct": 53.6,
+       "baseline_pct": 35.1,
+       "lift": 1.52
+      },
+      {
+       "value": "on_face",
+       "pct": 20.9,
+       "baseline_pct": 22.0,
+       "lift": 0.95
+      },
+      {
+       "value": "on_desk_idle",
+       "pct": 16.8,
+       "baseline_pct": 21.7,
+       "lift": 0.77
+      },
+      {
+       "value": "writing",
+       "pct": 6.6,
+       "baseline_pct": 12.1,
+       "lift": 0.55
+      }
+     ],
+     "phone_visible": [
+      {
+       "value": "False",
+       "pct": 88.8,
+       "baseline_pct": 79.2,
+       "lift": 1.12
+      },
+      {
+       "value": "True",
+       "pct": 11.2,
+       "baseline_pct": 20.8,
+       "lift": 0.54
+      }
+     ],
+     "laptop_visible": [
+      {
+       "value": "False",
+       "pct": 55.1,
+       "baseline_pct": 57.4,
+       "lift": 0.96
+      },
+      {
+       "value": "True",
+       "pct": 44.9,
+       "baseline_pct": 42.6,
+       "lift": 1.05
+      }
+     ],
+     "talking": [
+      {
+       "value": "False",
+       "pct": 99.5,
+       "baseline_pct": 99.4,
+       "lift": 1.0
+      },
+      {
+       "value": "True",
+       "pct": 0.5,
+       "baseline_pct": 0.6,
+       "lift": 0.8
+      }
+     ],
+     "occluded": [
+      {
+       "value": "False",
+       "pct": 99.0,
+       "baseline_pct": 98.7,
+       "lift": 1.0
+      },
+      {
+       "value": "True",
+       "pct": 1.0,
+       "baseline_pct": 1.3,
+       "lift": 0.8
+      }
+     ]
+    }
+   },
+   "enjoyment": {
+    "n": 161,
+    "fields": {
+     "activity": [
+      {
+       "value": "listening",
+       "pct": 41.6,
+       "baseline_pct": 36.3,
+       "lift": 1.15
+      },
+      {
+       "value": "using_laptop",
+       "pct": 26.1,
+       "baseline_pct": 18.3,
+       "lift": 1.43
+      },
+      {
+       "value": "other",
+       "pct": 10.6,
+       "baseline_pct": 10.4,
+       "lift": 1.01
+      },
+      {
+       "value": "writing_notes",
+       "pct": 6.8,
+       "baseline_pct": 11.3,
+       "lift": 0.61
+      }
+     ],
+     "gaze_direction": [
+      {
+       "value": "teacher_or_board",
+       "pct": 32.3,
+       "baseline_pct": 31.8,
+       "lift": 1.02
+      },
+      {
+       "value": "laptop",
+       "pct": 29.2,
+       "baseline_pct": 22.1,
+       "lift": 1.32
+      },
+      {
+       "value": "own_desk",
+       "pct": 21.1,
+       "baseline_pct": 31.2,
+       "lift": 0.68
+      },
+      {
+       "value": "peer",
+       "pct": 8.1,
+       "baseline_pct": 1.3,
+       "lift": 6.34
+      }
+     ],
+     "attention_target": [
+      {
+       "value": "device",
+       "pct": 31.7,
+       "baseline_pct": 29.3,
+       "lift": 1.08
+      },
+      {
+       "value": "instruction",
+       "pct": 31.1,
+       "baseline_pct": 31.2,
+       "lift": 0.99
+      },
+      {
+       "value": "own_work",
+       "pct": 23.6,
+       "baseline_pct": 32.5,
+       "lift": 0.73
+      },
+      {
+       "value": "distracted",
+       "pct": 6.8,
+       "baseline_pct": 5.8,
+       "lift": 1.18
+      }
+     ],
+     "engagement_level": [
+      {
+       "value": "engaged",
+       "pct": 82.6,
+       "baseline_pct": 82.8,
+       "lift": 1.0
+      },
+      {
+       "value": "disengaged",
+       "pct": 9.3,
+       "baseline_pct": 12.3,
+       "lift": 0.76
+      },
+      {
+       "value": "partially_engaged",
+       "pct": 8.1,
+       "baseline_pct": 4.9,
+       "lift": 1.66
+      }
+     ],
+     "posture": [
+      {
+       "value": "upright",
+       "pct": 59.0,
+       "baseline_pct": 43.3,
+       "lift": 1.36
+      },
+      {
+       "value": "leaning_forward",
+       "pct": 38.5,
+       "baseline_pct": 51.7,
+       "lift": 0.74
+      },
+      {
+       "value": "leaning_back",
+       "pct": 2.5,
+       "baseline_pct": 3.1,
+       "lift": 0.81
+      }
+     ],
+     "hand_state": [
+      {
+       "value": "unknown",
+       "pct": 47.8,
+       "baseline_pct": 35.1,
+       "lift": 1.36
+      },
+      {
+       "value": "on_desk_idle",
+       "pct": 23.0,
+       "baseline_pct": 21.7,
+       "lift": 1.06
+      },
+      {
+       "value": "on_face",
+       "pct": 15.5,
+       "baseline_pct": 22.0,
+       "lift": 0.71
+      },
+      {
+       "value": "writing",
+       "pct": 7.5,
+       "baseline_pct": 12.1,
+       "lift": 0.61
+      }
+     ],
+     "phone_visible": [
+      {
+       "value": "False",
+       "pct": 85.1,
+       "baseline_pct": 79.2,
+       "lift": 1.07
+      },
+      {
+       "value": "True",
+       "pct": 14.9,
+       "baseline_pct": 20.8,
+       "lift": 0.72
+      }
+     ],
+     "laptop_visible": [
+      {
+       "value": "True",
+       "pct": 57.1,
+       "baseline_pct": 42.6,
+       "lift": 1.34
+      },
+      {
+       "value": "False",
+       "pct": 42.9,
+       "baseline_pct": 57.4,
+       "lift": 0.75
+      }
+     ],
+     "talking": [
+      {
+       "value": "False",
+       "pct": 94.4,
+       "baseline_pct": 99.4,
+       "lift": 0.95
+      },
+      {
+       "value": "True",
+       "pct": 5.6,
+       "baseline_pct": 0.6,
+       "lift": 8.78
+      }
+     ],
+     "occluded": [
+      {
+       "value": "False",
+       "pct": 98.1,
+       "baseline_pct": 98.7,
+       "lift": 0.99
+      },
+      {
+       "value": "True",
+       "pct": 1.9,
+       "baseline_pct": 1.3,
+       "lift": 1.46
+      }
+     ]
+    }
+   },
+   "confusion": {
+    "n": 37,
+    "fields": {
+     "activity": [
+      {
+       "value": "listening",
+       "pct": 40.5,
+       "baseline_pct": 36.3,
+       "lift": 1.12
+      },
+      {
+       "value": "using_laptop",
+       "pct": 18.9,
+       "baseline_pct": 18.3,
+       "lift": 1.03
+      },
+      {
+       "value": "writing_notes",
+       "pct": 10.8,
+       "baseline_pct": 11.3,
+       "lift": 0.96
+      },
+      {
+       "value": "talking_to_peer",
+       "pct": 8.1,
+       "baseline_pct": 0.9,
+       "lift": 8.66
+      }
+     ],
+     "gaze_direction": [
+      {
+       "value": "teacher_or_board",
+       "pct": 37.8,
+       "baseline_pct": 31.8,
+       "lift": 1.19
+      },
+      {
+       "value": "own_desk",
+       "pct": 24.3,
+       "baseline_pct": 31.2,
+       "lift": 0.78
+      },
+      {
+       "value": "laptop",
+       "pct": 18.9,
+       "baseline_pct": 22.1,
+       "lift": 0.86
+      },
+      {
+       "value": "peer",
+       "pct": 8.1,
+       "baseline_pct": 1.3,
+       "lift": 6.36
+      }
+     ],
+     "attention_target": [
+      {
+       "value": "instruction",
+       "pct": 37.8,
+       "baseline_pct": 31.2,
+       "lift": 1.21
+      },
+      {
+       "value": "own_work",
+       "pct": 24.3,
+       "baseline_pct": 32.5,
+       "lift": 0.75
+      },
+      {
+       "value": "device",
+       "pct": 21.6,
+       "baseline_pct": 29.3,
+       "lift": 0.74
+      },
+      {
+       "value": "peer",
+       "pct": 8.1,
+       "baseline_pct": 1.2,
+       "lift": 6.98
+      }
+     ],
+     "engagement_level": [
+      {
+       "value": "engaged",
+       "pct": 78.4,
+       "baseline_pct": 82.8,
+       "lift": 0.95
+      },
+      {
+       "value": "partially_engaged",
+       "pct": 10.8,
+       "baseline_pct": 4.9,
+       "lift": 2.22
+      },
+      {
+       "value": "disengaged",
+       "pct": 10.8,
+       "baseline_pct": 12.3,
+       "lift": 0.88
+      }
+     ],
+     "posture": [
+      {
+       "value": "leaning_forward",
+       "pct": 67.6,
+       "baseline_pct": 51.7,
+       "lift": 1.31
+      },
+      {
+       "value": "upright",
+       "pct": 32.4,
+       "baseline_pct": 43.3,
+       "lift": 0.75
+      }
+     ],
+     "hand_state": [
+      {
+       "value": "unknown",
+       "pct": 32.4,
+       "baseline_pct": 35.1,
+       "lift": 0.92
+      },
+      {
+       "value": "on_face",
+       "pct": 29.7,
+       "baseline_pct": 22.0,
+       "lift": 1.35
+      },
+      {
+       "value": "on_desk_idle",
+       "pct": 24.3,
+       "baseline_pct": 21.7,
+       "lift": 1.12
+      },
+      {
+       "value": "writing",
+       "pct": 10.8,
+       "baseline_pct": 12.1,
+       "lift": 0.89
+      }
+     ],
+     "phone_visible": [
+      {
+       "value": "False",
+       "pct": 91.9,
+       "baseline_pct": 79.2,
+       "lift": 1.16
+      },
+      {
+       "value": "True",
+       "pct": 8.1,
+       "baseline_pct": 20.8,
+       "lift": 0.39
+      }
+     ],
+     "laptop_visible": [
+      {
+       "value": "False",
+       "pct": 67.6,
+       "baseline_pct": 57.4,
+       "lift": 1.18
+      },
+      {
+       "value": "True",
+       "pct": 32.4,
+       "baseline_pct": 42.6,
+       "lift": 0.76
+      }
+     ],
+     "talking": [
+      {
+       "value": "False",
+       "pct": 91.9,
+       "baseline_pct": 99.4,
+       "lift": 0.92
+      },
+      {
+       "value": "True",
+       "pct": 8.1,
+       "baseline_pct": 0.6,
+       "lift": 12.73
+      }
+     ],
+     "occluded": [
+      {
+       "value": "False",
+       "pct": 100.0,
+       "baseline_pct": 98.7,
+       "lift": 1.01
+      }
+     ]
+    }
+   }
+  },
+  "low_support": []
+ },
+ "human": {
+  "n_reviewed": 200,
+  "raer_label_verdict": {
+   "counts": {
+    "agree": 194,
+    "disagree": 3,
+    "(none)": 3
+   },
+   "pct_agree": 98.5,
+   "pct_disagree": 1.5
+  },
+  "raer_label_swaps": [
+   {
+    "from": "",
+    "to": "?",
+    "n": 1
+   },
+   {
+    "from": "neutrality",
+    "to": "?",
+    "n": 1
+   },
+   {
+    "from": "",
+    "to": "fatigue",
+    "n": 1
+   }
+  ],
+  "cue_accuracy": [
+   {
+    "field": "activity",
+    "n": 200,
+    "accuracy": 0.935
+   },
+   {
+    "field": "engagement_level",
+    "n": 200,
+    "accuracy": 0.965
+   },
+   {
+    "field": "gaze_direction",
+    "n": 200,
+    "accuracy": 0.995
+   },
+   {
+    "field": "attention_target",
+    "n": 200,
+    "accuracy": 1.0
+   },
+   {
+    "field": "posture",
+    "n": 200,
+    "accuracy": 1.0
+   },
+   {
+    "field": "hand_state",
+    "n": 200,
+    "accuracy": 1.0
+   },
+   {
+    "field": "phone_visible",
+    "n": 200,
+    "accuracy": 1.0
+   },
+   {
+    "field": "laptop_visible",
+    "n": 200,
+    "accuracy": 1.0
+   },
+   {
+    "field": "talking",
+    "n": 200,
+    "accuracy": 1.0
+   },
+   {
+    "field": "occluded",
+    "n": 200,
+    "accuracy": 1.0
+   }
+  ],
+  "by_group": {
+   "representative": {
+    "n": 160,
+    "macro_accuracy": 0.99
+   },
+   "hard": {
+    "n": 40,
+    "macro_accuracy": 0.9875
+   }
+  }
+ }
+}

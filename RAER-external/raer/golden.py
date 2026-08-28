@@ -73,11 +73,48 @@ def load_reviewed(path: Optional[Path]) -> Dict[str, str]:
     return reviewed
 
 
+DEGENERATE_AT = 0.95   # a field this constant tells the reviewer nothing
+
+
+def find_degenerate(rows: List[Dict[str, Any]], schema):
+    """Fields whose modal value covers >= DEGENERATE_AT of the corpus."""
+    from collections import Counter
+    out = []
+    for f, spec in schema.FIELDS.items():
+        if spec["type"] not in ("enum", "bool"):
+            continue
+        c = Counter(str(r.get(f)) for r in rows)
+        n = sum(c.values())
+        if not n:
+            continue
+        val, k = c.most_common(1)[0]
+        if k / n >= DEGENERATE_AT:
+            out.append((f, val, 100.0 * k / n))
+    return out
+
+
+def hardest(rows: List[Dict[str, Any]], n: int) -> List[int]:
+    """Indices of the clips the model was least self-consistent on.
+
+    NOT model_confidence: Qwen3.5 self-rates 0.95 on essentially everything here
+    (min 0.80, median 0.95, max 0.95), so confidence-based triage selects a
+    random subset. `cue_instability` — how much the cue values disagreed across
+    the clip's own frames — actually varies (0 to 0.58) and is a real signal of
+    a clip the model found difficult.
+    """
+    scored = [(r.get("cue_instability") or 0.0, i) for i, r in enumerate(rows)]
+    scored.sort(reverse=True)
+    return [i for _, i in scored[:n]]
+
+
 def build(clip_labels: Path, frames_dir: Path, out_dir: Path, schema, sampling,
           n_clips: int = 200, min_per_class: int = 25, hard_frac: float = 0.2,
           strip: int = 4, seed: int = 13,
           stratify_by: str = "raer_label",
-          seed_golden: Optional[Path] = None) -> Path:
+          seed_golden: Optional[Path] = None,
+          drop_degenerate: bool = True,
+          blind: bool = True,
+          require_label: bool = True) -> Path:
     """Write labeling/data.json for the three-way review UI.
 
     `seed_golden` carries work forward from an earlier review (typically the pilot).
@@ -91,26 +128,69 @@ def build(clip_labels: Path, frames_dir: Path, out_dir: Path, schema, sampling,
     if not rows:
         raise SystemExit(f"no clips in {clip_labels}")
 
+    # The mirror ships 2,669 clips but annotates only 2,649. Reviewing one of the
+    # 20 extras asks "does RAER's label fit?" about a clip that has no label —
+    # an unanswerable question that still costs a review slot, and whose answer
+    # then pollutes the agreement rate. Drop them.
+    if require_label:
+        labelled = [r for r in rows if r.get(stratify_by)]
+        if len(labelled) != len(rows):
+            print(f"[golden] excluding {len(rows) - len(labelled)} clips with no "
+                  f"{stratify_by} (unannotated extras)")
+        rows = labelled
+        if not rows:
+            raise SystemExit(f"no clips have a {stratify_by}")
+
+    # Fields that carry no information in this corpus are dropped from review.
+    # Asking a reviewer to confirm a value that is 99% constant costs attention
+    # and buys a meaningless 100% accuracy score.
+    degenerate = find_degenerate(rows, schema) if drop_degenerate else []
+    if drop_degenerate:
+        if degenerate:
+            print(f"[golden] dropping near-constant fields from review: "
+                  + ", ".join(f"{f} ({p:.0f}% {v})" for f, v, p in degenerate))
+
     reviewed = load_reviewed(seed_golden)
     seeded_idx = [i for i, r in enumerate(rows) if r["clip_stem"] in reviewed]
     if seeded_idx:
         print(f"[golden] carrying forward {len(seeded_idx)} already-reviewed clips "
               f"from {seed_golden}")
 
-    rest = [r for i, r in enumerate(rows) if i not in set(seeded_idx)]
+    taken = set(seeded_idx)
+    rest = [r for i, r in enumerate(rows) if i not in taken]
+    remap = {id(r): i for i, r in enumerate(rows)}
     n_new = max(0, n_clips - len(seeded_idx))
     picks = [(i, "seeded") for i in seeded_idx]
+
     if n_new:
-        sub = sampling.select(rest, n_new, [stratify_by], min_per_class, hard_frac, seed=seed)
-        # sampling.select indexes into `rest`; remap onto `rows`
-        remap = {id(r): i for i, r in enumerate(rows)}
-        picks += [(remap[id(rest[j])], grp) for j, grp in sub]
+        # Hard set comes from cue_instability, not sampling.select's
+        # model_confidence path — see hardest(). Representative set is then drawn
+        # from what remains, so the two groups stay disjoint.
+        n_hard = int(hard_frac * n_new)
+        hard_local = hardest(rest, n_hard)
+        hard_global = {remap[id(rest[j])] for j in hard_local}
+        picks += [(i, "hard") for i in hard_global]
+
+        pool = [r for j, r in enumerate(rest) if j not in set(hard_local)]
+        n_repr = n_new - len(hard_global)
+        # sampling.select applies min_per_class as a FLOOR per class per field, so
+        # 5 classes x 25 can return 112 when you asked for 60. Cap the floor so
+        # n_clips means n_clips; warn rather than silently shrinking coverage.
+        floor = min(min_per_class, max(1, n_repr // max(1, len(
+            {str(r.get(stratify_by)) for r in pool}))))
+        if floor < min_per_class:
+            print(f"[golden] min_per_class {min_per_class} would exceed n={n_clips}; "
+                  f"using {floor}/class. Raise --n for fuller rare-class coverage.")
+        sub = sampling.select(pool, n_repr, [stratify_by], floor, 0.0, seed=seed)
+        picks += [(remap[id(pool[j])], "representative") for j, _ in sub][:n_repr]
 
     frames_dir = Path(frames_dir)
     out_dir = Path(out_dir)
     out_dir.mkdir(parents=True, exist_ok=True)
 
-    cue_fields = {k: v for k, v in schema.FIELDS.items() if v["type"] in ("enum", "bool")}
+    dropped = {f for f, _, _ in (degenerate if drop_degenerate else [])}
+    cue_fields = {k: v for k, v in schema.FIELDS.items()
+                  if v["type"] in ("enum", "bool") and k not in dropped}
     items: List[Dict[str, Any]] = []
     missing: List[str] = []
     for k, (i, group) in enumerate(picks):
@@ -144,6 +224,12 @@ def build(clip_labels: Path, frames_dir: Path, out_dir: Path, schema, sampling,
     payload = {
         "fields": cue_fields,
         "raer_classes": ["enjoyment", "neutrality", "confusion", "fatigue", "distraction"],
+        # blind: the UI hides RAER's label until the reviewer has committed to the
+        # cues. Showing it first anchors them, which is how a 200-clip review came
+        # back with six fields at exactly 100%.
+        "blind": blind,
+        "dropped_fields": [{"field": f, "value": v, "pct": round(p, 1)}
+                           for f, v, p in degenerate],
         "items": items,
     }
     out = out_dir / "data.json"

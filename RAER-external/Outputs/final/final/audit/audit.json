@@ -1,0 +1,694 @@
+{
+ "mode": "full",
+ "paper_reference": {
+  "n_clips": 2649,
+  "n_subjects": 136,
+  "classes": {
+   "neutrality": 65.23,
+   "distraction": 19.89,
+   "fatigue": 7.4,
+   "enjoyment": 6.08,
+   "confusion": 1.4
+  },
+  "coarse_map": {
+   "neutrality": "engaged",
+   "enjoyment": "engaged",
+   "confusion": "engaged",
+   "fatigue": "engaged",
+   "distraction": "distracted"
+  },
+  "split": "80/20 train/test, 'striving to exclude' overlapping individuals",
+  "clip_seconds": "5-15",
+  "fleiss_kappa": 0.832
+ },
+ "inventory": {
+  "root": "/content/raer/RAER",
+  "total_files": 87809,
+  "total_bytes": 100354192487,
+  "by_ext": {
+   ".jpg": {
+    "count": 82488,
+    "bytes": 55919384262
+   },
+   ".mp4": {
+    "count": 2669,
+    "bytes": 44402710412
+   },
+   ".json": {
+    "count": 2,
+    "bytes": 13239368
+   },
+   ".pt": {
+    "count": 2640,
+    "bytes": 10536954
+   },
+   ".txt": {
+    "count": 9,
+    "bytes": 8321471
+   },
+   ".csv": {
+    "count": 1,
+    "bytes": 20
+   }
+  },
+  "top_dirs": [
+   [
+    "cached_features",
+    2640
+   ],
+   [
+    "clips/SelfStudy/Laboratory/P025",
+    59
+   ],
+   [
+    "images/SelfStudy/Laboratory/P021/044",
+    59
+   ],
+   [
+    "clips/SelfStudy/Laboratory/P035",
+    58
+   ],
+   [
+    "clips/Class/Classroom/Class009/P001",
+    58
+   ],
+   [
+    "images/Class/Classroom/Class009/P007/011",
+    56
+   ],
+   [
+    "clips/Class/Classroom/Class009/P003",
+    53
+   ],
+   [
+    "images/SelfStudy/Laboratory/P021/035",
+    51
+   ],
+   [
+    "clips/SelfStudy/Laboratory/P014",
+    47
+   ],
+   [
+    "images/SelfStudy/Laboratory/P011/025",
+    47
+   ],
+   [
+    "clips/SelfStudy/Laboratory/P021",
+    45
+   ],
+   [
+    "clips/SelfStudy/Laboratory/P019",
+    45
+   ],
+   [
+    "images/Class/Classroom/Class003/P009/007",
+    44
+   ],
+   [
+    "images/SelfStudy/Laboratory/P035/037",
+    42
+   ],
+   [
+    "images/SelfStudy/Dormitory/P003/019",
+    41
+   ],
+   [
+    "images/Class/Classroom/Class008/P001/011",
+    41
+   ],
+   [
+    "clips/SelfStudy/Laboratory/P026",
+    40
+   ],
+   [
+    "clips/SelfStudy/Laboratory/P030",
+    40
+   ],
+   [
+    "images/SelfStudy/Laboratory/P020/010",
+    40
+   ],
+   [
+    "images/Class/Classroom/Class003/P009/004",
+    40
+   ],
+   [
+    "images/SelfStudy/Library/P025/008",
+    39
+   ],
+   [
+    "images/SelfStudy/Laboratory/P020/011",
+    39
+   ],
+   [
+    "images/SelfStudy/Laboratory/P035/015",
+    39
+   ],
+   [
+    "images/SelfStudy/Laboratory/P036/016",
+    39
+   ],
+   [
+    "images/Class/Classroom/Class003/P013/002",
+    39
+   ]
+  ]
+ },
+ "metadata_files": [
+  {
+   "path": "annotation/test.txt",
+   "bytes": 26112,
+   "head": "RAER/images/Class/Classroom/Class005/P002/003 32 4\nRAER/images/SelfStudy/Laboratory/P036/023 31 1\nRAER/images/SelfStudy/Library/P007/001 31 5\nRAER/images/SelfStudy/Laboratory/P024/008 31 1\nRAER/images/SelfStudy/Dormitory/P001/005 30 4\nRAER/images/Class/Classroom/Class004/P001/015 30 1\nRAER/images/SelfStudy/Library/P016/004 30 5\nRAER/images/Class/Classroom/Class003/P006/018 30 2\nRAER/images/Class/Classroom/Class008/P006/014 32 4\nRAER/images/Class/Classroom/Class009/P003/005 30 1\nRAER/images/Class/Classroom/Class007/P006/001 32 2\nRAER/images/SelfStudy/Library/P020/007 30 1\nRAER/images/SelfStudy/Library/P002/005 30 1\nRAER/images/SelfStudy/Laboratory/P030/031 30 5\nRAER/images/Class/Classroom/Class007/P007/015 30 1\nRAER/images/SelfStudy/Library/P024/004 30 5\nRAER/images/Class/Classroom/Class008/P009/004 31 1\nRAER/images/Class/Classroom/Class008/P003/001 31 5\nRAER/images/Class/Classroom/Class006/P003/014 31 1\nRAER/images/Class/Classroom/Class004/P002/007 30 1\nRAER/images/Class/Classroom/Class006/P001/002 31 1\nRAER/images/Class/Classroom/Class009/P010/003 31 1\nRAER/images/SelfStudy/Classroom/P002/008 31 5\nRAER/images/SelfStudy/Laboratory/P024/017 31 1\nRAER/images/SelfStudy/Library/P002/007 31 1\nRAER/images/Class/Classroom/Class008/P001/006 31 4\nRAER/images/Class/Classroom/Class001/P002/001 30 1\nRAER/images/Class/Classroom/Class005/P001/007 30 4\nRAER/images/SelfStudy/Laboratory/P004/008 30 5\nRAER/images/SelfStudy/Laboratory/P021/001 30 1\nRAER/images/SelfStudy/Laboratory/P029/032 32 5\nRAER/images/SelfStudy/Laboratory/P035/052 31 5\nRAER/images/Class/Classroom/Class003/P004/013 30 1\nRAER/images/SelfStudy/Dormitory/P003/010 30 1\nRAER/images/SelfStudy/Laboratory/P033/023 31 2\nRAER/images/Class/Classroom/Class006/P003/012 31 1\nRAER/images/SelfStudy/Laboratory/P015/009 31 2\nRAER/images/Class/Classroom/Class008/P006/016 31 5\nRAER/images/SelfStudy/Laboratory/P019/011 33 1\nRAER/images/Class/Classroom/Class006/P003/005 31 1\nRAER/images/Class/Classroom/Class009/P008/012 32 1\nRAER/images/SelfStudy/Laboratory/P024/006 31 1\nRAER/images/SelfStudy/Laboratory/P028/018 30 4\nRAER/images/SelfStudy/Library/P010/017 33 1\nRAER/images/Class/Classroom/Class004/P002/015 30 5\nRAER/images/Class/Classroom/Class009/P005/011 30 5\nRAER/images/SelfStudy/Library/P013/007 30 5\nRAER/images/SelfStudy/Dormitory/P002/016 30 1\nRAER/images/SelfStudy/Library/P009/001 31 1\nRAER/images/Class/Classroom/Class009/P002/022 31 1\nRAER/images/SelfStudy/Laboratory/P035/048 30 1\nRAER/images/SelfStudy/Laboratory/P024/024 32 1\nRAER/images/Class/Classroom/Class003/P014/009 30 5\nRAER/images/SelfStudy/Library/P012/008 30 1\nRAER/images/Class/Classroom/Class008/P007/015 31 1\nRAER/images/Class/Classroom/Class008/P003/002 30 5\nRAER/images/Class/Classroom/Class009/P005/004 30 1\nRAER/images/SelfStudy/Laboratory/P014/019 32 1\nRAER/images/SelfStudy/Laboratory/P030/009 31 1\nRAER/images/Class/Classroom/Class008/P005/005 30 5\nRAER/images/Class/Classroom/Class009/P003/035 32 2\nRAER/images/SelfStudy/Laboratory/P026/030 31 1\nRAER/images/SelfStudy/Laboratory/P011/018 31 4\nRAER/images/SelfStudy/Library/P017/008 31 5\nRAER/images/SelfStudy/Dormitory/P007/011 32 1\nRAER/images/SelfStudy/Laboratory/P030/036 31 1\nRAER/images/Class/Classroom/Class009/P004/001 30 1\nRAER/images/Class/Classroom/Class002/P001/018 31 5\nRAER/images/SelfStudy/Laboratory/P040/005 31 1\nRAER/images/Class/Classroom/Class009/P002/020 31 1\nRAER/images/SelfStudy/Library/P016/002 30 1\nRAER/images/SelfStudy/Library/P004/012 31 1\nRAER/images/Class/Classroom/Class009/P001/022 30 1\nRAER/images/SelfStudy/Laboratory/P014/032 31 1\nRAER/images/SelfStudy/Laboratory/P041/025 31 2\nRAER/images/Class/Classroom/Class002/P001/006 31 5\nRAER/images/SelfStudy/Classroom/P005/014 32 5\nRAER/images/SelfStudy/Dormitory/P002/005 30 2\nRAER/images/Class/Classroom/Class008/P002/018 30 1\nRAER/images/Class/Classroom/Class001/P006/003 30 2\nRAER/images/Class/Classroom/Class006/P003/002 32 1\nRAER/images/SelfStudy/Laboratory/P004/009 32 4\nRAER/images/Class/Classroom/Class009/P00",
+   "n_lines": 528
+  },
+  {
+   "path": "annotation/train.txt",
+   "bytes": 104223,
+   "head": "RAER/images/Class/Classroom/Class009/P001/032 32 5\nRAER/images/SelfStudy/Laboratory/P021/045 30 1\nRAER/images/SelfStudy/Library/P010/022 30 1\nRAER/images/SelfStudy/Laboratory/P012/014 30 5\nRAER/images/SelfStudy/Laboratory/P036/017 30 4\nRAER/images/SelfStudy/Laboratory/P028/006 30 5\nRAER/images/SelfStudy/Laboratory/P039/008 30 4\nRAER/images/Class/Classroom/Class007/P001/006 30 1\nRAER/images/Class/Classroom/Class008/P004/005 30 5\nRAER/images/Class/Classroom/Class004/P002/008 30 1\nRAER/images/SelfStudy/Laboratory/P025/014 31 1\nRAER/images/SelfStudy/Laboratory/P024/010 30 5\nRAER/images/SelfStudy/Dormitory/P004/001 30 1\nRAER/images/Class/Classroom/Class003/P014/019 30 5\nRAER/images/SelfStudy/Laboratory/P016/006 31 5\nRAER/images/Class/Classroom/Class007/P002/014 31 1\nRAER/images/SelfStudy/Laboratory/P009/009 30 1\nRAER/images/SelfStudy/Library/P013/001 30 1\nRAER/images/SelfStudy/Laboratory/P036/022 32 5\nRAER/images/Class/Classroom/Class009/P005/008 31 5\nRAER/images/SelfStudy/Classroom/P006/001 31 5\nRAER/images/SelfStudy/Dormitory/P004/012 30 5\nRAER/images/SelfStudy/Dormitory/P003/019 41 3\nRAER/images/SelfStudy/Laboratory/P041/024 31 1\nRAER/images/Class/Classroom/Class003/P013/008 35 4\nRAER/images/Class/Classroom/Class009/P002/003 30 1\nRAER/images/Class/Classroom/Class008/P001/005 32 1\nRAER/images/SelfStudy/Dormitory/P004/018 30 1\nRAER/images/Class/Classroom/Class008/P002/006 30 1\nRAER/images/SelfStudy/Laboratory/P020/004 30 1\nRAER/images/Class/Classroom/Class006/P003/017 31 1\nRAER/images/Class/Classroom/Class003/P007/016 30 2\nRAER/images/SelfStudy/Laboratory/P019/044 30 1\nRAER/images/SelfStudy/Dormitory/P007/005 31 1\nRAER/images/SelfStudy/Laboratory/P040/006 32 5\nRAER/images/SelfStudy/Library/P006/006 31 5\nRAER/images/Class/Classroom/Class009/P009/023 31 4\nRAER/images/SelfStudy/Library/P006/007 31 1\nRAER/images/SelfStudy/Laboratory/P001/011 30 1\nRAER/images/Class/Classroom/Class007/P007/012 31 5\nRAER/images/SelfStudy/Laboratory/P007/008 30 1\nRAER/images/SelfStudy/Library/P002/015 30 1\nRAER/images/Class/Classroom/Class003/P010/013 30 5\nRAER/images/SelfStudy/Laboratory/P028/019 30 1\nRAER/images/SelfStudy/Laboratory/P003/010 30 1\nRAER/images/SelfStudy/Laboratory/P041/003 30 1\nRAER/images/Class/Classroom/Class007/P005/003 31 1\nRAER/images/Class/Classroom/Class009/P003/052 30 1\nRAER/images/SelfStudy/Library/P001/004 30 1\nRAER/images/SelfStudy/Library/P007/015 32 5\nRAER/images/SelfStudy/Library/P023/005 30 1\nRAER/images/Class/Classroom/Class009/P007/011 56 3\nRAER/images/SelfStudy/Laboratory/P014/023 32 2\nRAER/images/SelfStudy/Library/P005/003 30 1\nRAER/images/SelfStudy/Laboratory/P027/002 31 1\nRAER/images/Class/Classroom/Class008/P005/008 31 5\nRAER/images/Class/Classroom/Class003/P003/018 30 1\nRAER/images/SelfStudy/Laboratory/P041/016 30 1\nRAER/images/SelfStudy/Dormitory/P004/014 32 1\nRAER/images/Class/Classroom/Class001/P003/002 30 2\nRAER/images/Class/Classroom/Class008/P003/012 30 5\nRAER/images/Class/Classroom/Class006/P001/014 31 1\nRAER/images/SelfStudy/Laboratory/P016/004 34 4\nRAER/images/SelfStudy/Laboratory/P025/027 30 1\nRAER/images/Class/Classroom/Class005/P003/002 32 1\nRAER/images/SelfStudy/Laboratory/P026/017 31 1\nRAER/images/Class/Classroom/Class008/P003/010 31 5\nRAER/images/SelfStudy/Dormitory/P001/012 30 1\nRAER/images/SelfStudy/Laboratory/P035/050 31 5\nRAER/images/Class/Classroom/Class003/P014/012 30 5\nRAER/images/SelfStudy/Laboratory/P031/013 31 1\nRAER/images/SelfStudy/Library/P002/003 32 5\nRAER/images/SelfStudy/Laboratory/P041/004 30 1\nRAER/images/Class/Classroom/Class009/P006/016 33 5\nRAER/images/SelfStudy/Library/P013/011 30 1\nRAER/images/Class/Classroom/Class002/P001/021 32 2\nRAER/images/SelfStudy/Laboratory/P011/027 30 1\nRAER/images/SelfStudy/Library/P012/004 30 1\nRAER/images/Class/Classroom/Class009/P007/009 33 1\nRAER/images/SelfStudy/Laboratory/P035/042 32 1\nRAER/images/Class/Classroom/Class004/P003/007 30 1\nRAER/images/SelfStudy/Laboratory/P028/027 31 1\nRAER/images/SelfStudy/Laboratory/P015/007 30 1\nRAER/images/SelfStu",
+   "n_lines": 2121
+  },
+  {
+   "path": "annotation/train_subset.txt",
+   "bytes": 1216,
+   "head": "RAER/images/Class/Classroom/Class007/P004/002 31 5\nRAER/images/Class/Classroom/Class003/P014/007 30 5\nRAER/images/SelfStudy/Laboratory/P033/021 31 5\nRAER/images/SelfStudy/Laboratory/P029/033 32 5\nRAER/images/SelfStudy/Laboratory/P035/001 31 5\nRAER/images/SelfStudy/Laboratory/P029/021 30 1\nRAER/images/SelfStudy/Library/P011/014 30 1\nRAER/images/SelfStudy/Laboratory/P041/004 30 1\nRAER/images/SelfStudy/Library/P015/016 31 1\nRAER/images/Class/Classroom/Class009/P001/023 32 1\nRAER/images/Class/Classroom/Class009/P008/014 30 4\nRAER/images/Class/Classroom/Class009/P002/015 32 4\nRAER/images/Class/Classroom/Class003/P003/003 34 4\nRAER/images/Class/Classroom/Class001/P004/002 30 4\nRAER/images/SelfStudy/Laboratory/P025/052 30 4\nRAER/images/SelfStudy/Dormitory/P003/017 35 3\nRAER/images/Class/Classroom/Class009/P007/001 32 3\nRAER/images/Class/Classroom/Class009/P007/014 30 3\nRAER/images/Class/Classroom/Class009/P007/023 34 3\nRAER/images/SelfStudy/Laboratory/P035/015 39 3\nRAER/images/Class/Classroom/Class001/P006/007 30 2\nRAER/images/SelfStudy/Laboratory/P018/002 32 2\nRAER/images/SelfStudy/Laboratory/P020/019 30 2\nRAER/images/SelfStudy/Laboratory/P025/053 30 2\nRAER/images/Class/Classroom/Class007/P006/005 30 2\n",
+   "n_lines": 25
+  },
+  {
+   "path": "bounding_box/body.json",
+   "bytes": 443701,
+   "head": "{\n    \"RAER/images/SelfStudy/Dormitory/P003/003\": [\n        620.4568481445312,\n        2.854522705078125,\n        1880.739501953125,\n        1064.0048828125\n    ],\n    \"RAER/images/SelfStudy/Dormitory/P003/021\": [\n        499.01251220703125,\n        3.6405029296875,\n        1681.7669677734375,\n        1065.96533203125\n    ],\n    \"RAER/images/SelfStudy/Dormitory/P003/015\": [\n        604.9110717773438,\n        0.0,\n        1920.0,\n        1070.765869140625\n    ],\n    \"RAER/images/SelfStudy/Dormitory/P003/013\": [\n        319.9771728515625,\n        2.1895751953125,\n        1919.4547119140625,\n        1069.0404052734375\n    ],\n    \"RAER/images/SelfStudy/Dormitory/P003/007\": [\n        644.6832885742188,\n        0.0,\n        1734.77978515625,\n        1065.1429443359375\n    ],\n    \"RAER/images/SelfStudy/Dormitory/P003/011\": [\n        587.7271728515625,\n        0.0,\n        1912.89697265625,\n        1065.3966064453125\n    ],\n    \"RAER/images/SelfStudy/Dormitory/P003/017\": [\n        236.3763427734375,\n        0.0,\n        1881.8946533203125,\n        1060.362548828125\n    ],\n    \"RAER/images/SelfStudy/Dormitory/P003/023\": [\n        672.2091064453125,\n        0.0,\n        1919.5784912109375,\n        1060.4697265625\n    ],\n    \"RAER/images/SelfStudy/Dormitory/P003/016\": [\n        605.9679565429688,\n        1.59539794921875,\n        1920.0,\n        1060.52685546875\n    ],\n    \"RAER/images/SelfStudy/Dormitory/P003/026\": [\n        639.7564086914062,\n        2.86376953125,\n        1918.7457275390625,\n        1052.09375\n    ],\n    \"RAER/images/SelfStudy/Dormitory/P003/022\": [\n        688.1900024414062,\n        0.935211181640625,\n        1920.0,\n        1061.6485595703125\n    ],\n    \"RAER/images/SelfStudy/Dormitory/P003/025\": [\n        620.9039916992188,\n        4.89697265625,\n        1910.5968017578125,\n        1068.7401123046875\n    ],\n    \"RAER/images/SelfStudy/Dormitory/P003/010\": [\n        558.6910400390625,\n        0.0,\n        1920.0,\n        1052.82470703125\n    ],\n    \"RAER/images/SelfStudy/Dormitory/P003/008\": [\n        492.96697998046875,\n        0.0,\n        1918.235595703125,\n        1071.260986328125\n    ],\n    \"RAER/images/SelfStudy/Dormitory/P003/014\": [\n        262.00762939453125,\n        1.952911376953125,\n        1920.0,\n        1069.556640625\n    ],\n    \"RAER/images/SelfStudy/Dormitory/P003/020\": [\n        472.59490966796875,\n        2.940673828125,\n        1920.0,\n        1067.509521484375\n    ],\n    \"RAER/images/SelfStudy/Dormitory/P003/019\": [\n        659.5255737304688,\n        5.38421630859375,\n        1916.2620849609375,\n        1056.84765625\n    ],\n    \"RAER/images/SelfStudy/Dormitory/P003/006\": [\n        722.3865966796875,\n        2.112579345703125,\n        1763.95166015625,\n        1058.9208984375\n    ],\n    \"RAER/images/SelfStudy/Dormitory/P003/018\": [\n        7.9361572265625,\n        0.0,\n        1920.0,\n        1076.2847900390625\n    ],\n    \"RAER/images/SelfStudy/Dormitory/P003/024\": [\n        483.8880615234375,\n        0.59564208984375,\n        1919.685546875,\n        1068.1636962890625\n    ],\n    \"RAER/images/SelfStudy/Dormitory/P003/005\": [\n        632.9212646484375,\n        1.186981201171875,\n        1917.02490234375,\n        1060.9072265625\n    ],\n    \"RAER/images/SelfStudy/Dormitory/P003/002\": [\n        671.2556762695312,\n        0.0,\n        1918.241455078125,\n        1054.677734375\n    ],\n    \"RAER/images/SelfStudy/Dormitory/P003/009\": [\n        616.9006958007812,\n        5.6693115234375,\n        1844.1573486328125,\n        1061.7921142578125\n    ],\n    \"RAER/images/SelfStudy/Dormitory/P003/004\": [\n        638.3446655273438,\n        3.834869384765625,\n        1895.11962890625,\n        1069.04638671875\n    ],\n    \"RAER/images/SelfStudy/Dormitory/P003/012\": [\n        639.3323974609375,\n        7.3553466796875,\n        1919.1455078125,\n        1062.3858642578125\n    ],\n    \"RAER/images/SelfStudy/Dormitory/P003/001\": [\n        640.6578369140625,\n        5.74493408203125,\n        1918.178466796875,\n        1063.",
+   "structure": {
+    "RAER/images/SelfStudy/Dormitory/P003/003": [
+     "list[4]",
+     "float"
+    ],
+    "RAER/images/SelfStudy/Dormitory/P003/021": [
+     "list[4]",
+     "float"
+    ],
+    "RAER/images/SelfStudy/Dormitory/P003/015": [
+     "list[4]",
+     "float"
+    ],
+    "RAER/images/SelfStudy/Dormitory/P003/013": [
+     "list[4]",
+     "float"
+    ],
+    "RAER/images/SelfStudy/Dormitory/P003/007": [
+     "list[4]",
+     "float"
+    ],
+    "RAER/images/SelfStudy/Dormitory/P003/011": [
+     "list[4]",
+     "float"
+    ],
+    "RAER/images/SelfStudy/Dormitory/P003/017": [
+     "list[4]",
+     "float"
+    ],
+    "RAER/images/SelfStudy/Dormitory/P003/023": [
+     "list[4]",
+     "float"
+    ],
+    "...": "+2653 more keys"
+   }
+  },
+  {
+   "path": "bounding_box/face.json",
+   "bytes": 12795667,
+   "head": "{\n    \"RAER/images/SelfStudy/Dormitory/P003/003\": {\n        \"28.jpg\": [\n            884.0751953125,\n            113.38131713867188,\n            1225.1097412109375,\n            549.8421630859375\n        ],\n        \"23.jpg\": [\n            881.6144409179688,\n            131.74560546875,\n            1213.1986083984375,\n            554.4024047851562\n        ],\n        \"16.jpg\": [\n            883.4217529296875,\n            158.42654418945312,\n            1192.7271728515625,\n            539.95947265625\n        ],\n        \"21.jpg\": [\n            888.1912231445312,\n            130.55615234375,\n            1222.0206298828125,\n            554.0469360351562\n        ],\n        \"1.jpg\": [\n            1044.18359375,\n            238.2394561767578,\n            1420.3087158203125,\n            653.3030395507812\n        ],\n        \"6.jpg\": [\n            899.49951171875,\n            102.54338073730469,\n            1230.2855224609375,\n            531.0853271484375\n        ],\n        \"20.jpg\": [\n            891.36669921875,\n            128.82135009765625,\n            1223.340087890625,\n            546.1490478515625\n        ],\n        \"11.jpg\": [\n            906.8173828125,\n            140.88186645507812,\n            1218.3746337890625,\n            543.6331787109375\n        ],\n        \"22.jpg\": [\n            890.8981323242188,\n            132.01510620117188,\n            1221.516357421875,\n            551.7532958984375\n        ],\n        \"10.jpg\": [\n            906.157958984375,\n            137.22882080078125,\n            1220.777587890625,\n            530.3493041992188\n        ],\n        \"27.jpg\": [\n            887.74560546875,\n            117.44451904296875,\n            1221.8095703125,\n            546.4476318359375\n        ],\n        \"4.jpg\": [\n            951.9063720703125,\n            85.2760238647461,\n            1278.251708984375,\n            500.607421875\n        ],\n        \"8.jpg\": [\n            882.4935302734375,\n            105.52386474609375,\n            1222.806396484375,\n            546.2753295898438\n        ],\n        \"18.jpg\": [\n            890.528564453125,\n            136.45558166503906,\n            1211.123046875,\n            537.5176391601562\n        ],\n        \"19.jpg\": [\n            913.3529663085938,\n            132.65757751464844,\n            1232.0672607421875,\n            537.2894287109375\n        ],\n        \"24.jpg\": [\n            875.6024169921875,\n            124.38523864746094,\n            1209.8038330078125,\n            546.1944580078125\n        ],\n        \"30.jpg\": [\n            888.8825073242188,\n            136.3444366455078,\n            1197.4752197265625,\n            527.5121459960938\n        ],\n        \"9.jpg\": [\n            883.3046264648438,\n            106.95680236816406,\n            1222.5611572265625,\n            556.8972778320312\n        ],\n        \"12.jpg\": [\n            892.2518310546875,\n            157.93386840820312,\n            1200.2738037109375,\n            539.3116455078125\n        ],\n        \"3.jpg\": [\n            1018.1212158203125,\n            75.91836547851562,\n            1342.171630859375,\n            495.8532409667969\n        ],\n        \"13.jpg\": [\n            894.5563354492188,\n            154.5889892578125,\n            1206.045166015625,\n            550.086181640625\n        ],\n        \"29.jpg\": [\n            883.4832153320312,\n            118.59913635253906,\n            1220.70849609375,\n            556.89697265625\n        ],\n        \"15.jpg\": [\n            880.9848022460938,\n            154.36810302734375,\n            1178.169677734375,\n            533.0538330078125\n        ],\n        \"17.jpg\": [\n            880.8726196289062,\n            156.0918426513672,\n            1182.0799560546875,\n            536.2080688476562\n        ],\n        \"26.jpg\": [\n            895.2305908203125,\n            138.90554809570312,\n            1216.958251953125,\n            541.6973876953125\n        ],\n        \"7.jpg\": [\n            878.9864501953125,\n            131.67037963867188,\n            1196.672607421875",
+   "structure": {
+    "RAER/images/SelfStudy/Dormitory/P003/003": {
+     "28.jpg": [
+      "list[4]",
+      "float"
+     ],
+     "23.jpg": [
+      "list[4]",
+      "float"
+     ],
+     "16.jpg": [
+      "list[4]",
+      "float"
+     ],
+     "21.jpg": [
+      "list[4]",
+      "float"
+     ],
+     "1.jpg": [
+      "list[4]",
+      "float"
+     ],
+     "6.jpg": [
+      "list[4]",
+      "float"
+     ],
+     "20.jpg": [
+      "list[4]",
+      "float"
+     ],
+     "11.jpg": [
+      "list[4]",
+      "float"
+     ],
+     "...": "+22 more keys"
+    },
+    "RAER/images/SelfStudy/Dormitory/P003/021": {
+     "28.jpg": [
+      "list[4]",
+      "float"
+     ],
+     "23.jpg": [
+      "list[4]",
+      "float"
+     ],
+     "16.jpg": [
+      "list[4]",
+      "float"
+     ],
+     "21.jpg": [
+      "list[4]",
+      "float"
+     ],
+     "1.jpg": [
+      "list[4]",
+      "float"
+     ],
+     "6.jpg": [
+      "list[4]",
+      "float"
+     ],
+     "20.jpg": [
+      "list[4]",
+      "float"
+     ],
+     "11.jpg": [
+      "list[4]",
+      "float"
+     ],
+     "...": "+22 more keys"
+    },
+    "RAER/images/SelfStudy/Dormitory/P003/015": {
+     "28.jpg": [
+      "list[4]",
+      "float"
+     ],
+     "23.jpg": [
+      "list[4]",
+      "float"
+     ],
+     "16.jpg": [
+      "list[4]",
+      "float"
+     ],
+     "21.jpg": [
+      "list[4]",
+      "float"
+     ],
+     "1.jpg": [
+      "list[4]",
+      "float"
+     ],
+     "6.jpg": [
+      "list[4]",
+      "float"
+     ],
+     "20.jpg": [
+      "list[4]",
+      "float"
+     ],
+     "11.jpg": [
+      "list[4]",
+      "float"
+     ],
+     "...": "+22 more keys"
+    },
+    "RAER/images/SelfStudy/Dormitory/P003/013": {
+     "28.jpg": [
+      "list[4]",
+      "float"
+     ],
+     "23.jpg": [
+      "list[4]",
+      "float"
+     ],
+     "16.jpg": [
+      "list[4]",
+      "float"
+     ],
+     "21.jpg": [
+      "list[4]",
+      "float"
+     ],
+     "1.jpg": [
+      "list[4]",
+      "float"
+     ],
+     "6.jpg": [
+      "list[4]",
+      "float"
+     ],
+     "20.jpg": [
+      "list[4]",
+      "float"
+     ],
+     "11.jpg": [
+      "list[4]",
+      "float"
+     ],
+     "...": "+23 more keys"
+    },
+    "RAER/images/SelfStudy/Dormitory/P003/007": {
+     "28.jpg": [
+      "list[4]",
+      "float"
+     ],
+     "23.jpg": [
+      "list[4]",
+      "float"
+     ],
+     "16.jpg": [
+      "list[4]",
+      "float"
+     ],
+     "21.jpg": [
+      "list[4]",
+      "float"
+     ],
+     "1.jpg": [
+      "list[4]",
+      "float"
+     ],
+     "6.jpg": [
+      "list[4]",
+      "float"
+     ],
+     "20.jpg": [
+      "list[4]",
+      "float"
+     ],
+     "11.jpg": [
+      "list[4]",
+      "float"
+     ],
+     "...": "+22 more keys"
+    },
+    "RAER/images/SelfStudy/Dormitory/P003/011": {
+     "28.jpg": [
+      "list[4]",
+      "float"
+     ],
+     "23.jpg": [
+      "list[4]",
+      "float"
+     ],
+     "16.jpg": [
+      "list[4]",
+      "float"
+     ],
+     "21.jpg": [
+      "list[4]",
+      "float"
+     ],
+     "1.jpg": [
+      "list[4]",
+      "float"
+     ],
+     "6.jpg": [
+      "list[4]",
+      "float"
+     ],
+     "20.jpg": [
+      "list[4]",
+      "float"
+     ],
+     "11.jpg": [
+      "list[4]",
+      "float"
+     ],
+     "...": "+22 more keys"
+    },
+    "RAER/images/SelfStudy/Dormitory/P003/017": {
+     "31.jpg": [
+      "list[4]",
+      "float"
+     ],
+     "6.jpg": [
+      "list[4]",
+      "float"
+     ],
+     "2.jpg": [
+      "list[4]",
+      "float"
+     ],
+     "17.jpg": [
+      "list[4]",
+      "float"
+     ],
+     "16.jpg": [
+      "list[4]",
+      "float"
+     ],
+     "18.jpg": [
+      "list[4]",
+      "float"
+     ],
+     "7.jpg": [
+      "list[4]",
+      "float"
+     ],
+     "15.jpg": [
+      "list[4]",
+      "float"
+     ],
+     "...": "+27 more keys"
+    },
+    "RAER/images/SelfStudy/Dormitory/P003/023": {
+     "28.jpg": [
+      "list[4]",
+      "float"
+     ],
+     "23.jpg": [
+      "list[4]",
+      "float"
+     ],
+     "16.jpg": [
+      "list[4]",
+      "float"
+     ],
+     "21.jpg": [
+      "list[4]",
+      "float"
+     ],
+     "1.jpg": [
+      "list[4]",
+      "float"
+     ],
+     "6.jpg": [
+      "list[4]",
+      "float"
+     ],
+     "20.jpg": [
+      "list[4]",
+      "float"
+     ],
+     "11.jpg": [
+      "list[4]",
+      "float"
+     ],
+     "...": "+22 more keys"
+    },
+    "...": "+2628 more keys"
+   }
+  },
+  {
+   "path": "output_annotation/test.txt",
+   "bytes": 1416700,
+   "head": "images/Class/Classroom/Class009/P001/032/8.jpg: The image features a young man sitting at a desk in a classroom, wearing glasses and a black jacket. He is holding his hands up to his face, resting his chin on them. There are several books placed on the desk in front of him, and another book can be seen nearby.\n\nIn addition to the main subject, there are four other people in the scene, two of whom are sitting on chairs at the right side of the image, while the other two are standing near the back of the room. There are also two laptops in the scene, one located on the right side and the other closer to the center. A cell phone can be seen resting on the desk as well.\nimages/Class/Classroom/Class009/P001/032/9.jpg: The image features a young man wearing glasses and a black jacket, sitting in a classroom with a book in front of him. He appears to be focused on reading the book, possibly studying for an exam. The man is sitting on a chair that is placed near a table. \n\nThere are other people in the classroom as well, with one person sitting behind the man and two others on the right side of the image. Additionally, there is a laptop on the table, suggesting that the students may be using technology for their studies.\nimages/Class/Classroom/Class009/P001/032/14.jpg: The image depicts a classroom setting with several students engaged in their studies. The main focus is on a man sitting in a chair, wearing a black jacket and glasses, and looking down at a book. Another person is also present in the scene, but they are not the main subject. \n\nIn the classroom, there are multiple chairs, with some of them unoccupied. A laptop can be seen placed on a surface, along with a keyboard and a mouse. There are also several books scattered around the room, indicating that the students are likely studying or working on assignments.\nimages/Class/Classroom/Class009/P001/032/28.jpg: The image shows a young man with glasses sitting at a desk and reading a book. He appears to be wearing a black jacket and has a focused expression as he reads. Another person is present in the scene, standing behind the man and holding a laptop. There are three more people in the background, with one of them also wearing a laptop. \n\nThe desk the man is sitting at is surrounded by multiple books, indicating that it might be a study or workspace. A bottle can be seen on the table, likely a drink for the man to enjoy while reading. Overall, the scene depicts a person engaged in reading and learning, possibly at a school or library setting.\nimages/Class/Classroom/Class009/P001/032/29.jpg: The image features a man wearing a black jacket and glasses, sitting at a desk and reading a book. He appears to be focused on the book and is positioned in a chair with his hands on his chin. The man is also wearing a mask, which indicates that the setting might be in a public area or a place where masks are required.\n\nThere are several other people in the room, including a woman with glasses sitting next to the man. Other individuals can be seen in the background, indicating that this could be a public space or a place where people are gathered.\nimages/Class/Classroom/Class009/P001/032/15.jpg: The image features a man sitting at a table with a book in front of him. He is wearing glasses and has a casual, comfortable posture. The man is touching his chin with one hand while the other hand is resting on the table. There is a laptop next to him, and another person can be seen in the background, possibly studying or working as well. The scene appears to be set in a room with multiple chairs, where the man is likely focused on his book or his work on the laptop.\nimages/Class/Classroom/Class009/P001/032/17.jpg: The image features a young man with glasses, wearing a black jacket, sitting in a classroom setting. He is leaning on his left hand, with his right hand placed on a book. The man appears to be a student, possibly studying or taking notes during a class session. \n\nThere are several othe",
+   "n_lines": 5500
+  },
+  {
+   "path": "output_annotation/test1.txt",
+   "bytes": 1713876,
+   "head": "images/Class/Classroom/Class005/P002/003/8.jpg: The image features a group of people sitting at tables, each using a laptop. There are at least four people in the scene, with one person sitting at the center of the image, another person on the left side, and two more people on the right side.\n\nThe person in the center is wearing glasses and appears to be yawning while using their laptop. The other people are also focused on their laptops, with one person on the left side of the image and two more on the right side.\n\nThe tables are equipped with laptops, and there are also a few bottles placed on the tables, possibly containing drinks for the people working. The overall atmosphere suggests a collaborative work environment\nimages/Class/Classroom/Class005/P002/003/9.jpg: The image features a man sitting at a desk in a classroom, wearing glasses and a black jacket. He appears to be excited or surprised, possibly due to an unexpected event or news. The man is using a laptop, which is placed on the desk in front of him.\n\nThere are several other people in the room, some of whom are also using laptops. A bottle can be seen on the desk, and a cell phone is placed nearby. The classroom setting suggests that the man might be attending a lecture or participating in a group discussion.\nimages/Class/Classroom/Class005/P002/003/14.jpg: The image features a man sitting at a desk with a laptop in front of him. He appears to be surprised or excited, possibly due to a sudden event or news. The man is wearing glasses and a black jacket, and he is holding his mouth open.\n\nThere are two other people in the scene, one on the left side and another on the right side of the image. Both of them are also using laptops, with one of them sitting closer to the foreground and the other person further back. The room has a dining table in the background, and there are a few chairs placed around the area.\nimages/Class/Classroom/Class005/P002/003/28.jpg: The image features a group of people sitting at tables, each using a laptop. There are at least four people in the scene, with one person sitting in the foreground and the others in the background. The person in the foreground is wearing a black jacket and appears to be focused on their laptop.\n\nThe tables are equipped with laptops, and there are also a few bottles placed on the tables. One bottle is located near the person in the foreground, while the others are scattered across the tables. The scene suggests a collaborative work environment or a study area where people are engaged in their tasks.\nimages/Class/Classroom/Class005/P002/003/29.jpg: The image features a group of people sitting at tables, each using a laptop. There are at least four people in the scene, with one person sitting at the center of the image, another person on the left side, and two more people on the right side.\n\nThe person in the center is wearing a black jacket and appears to be looking at their laptop screen. The other people are also focused on their laptops, indicating that they might be working or studying together.\n\nThe tables are equipped with laptops, and there are also a few bottles placed on the tables, possibly containing drinks for the people using the laptops.\nimages/Class/Classroom/Class005/P002/003/15.jpg: The image features a classroom setting with several students working on their laptops. A young man is sitting at a desk, wearing glasses and looking at his laptop with a surprised expression. Another person is sitting nearby, also using a laptop. There are multiple chairs and desks in the room, with some students sitting on chairs and others standing.\n\nIn addition to the students, there are a few bottles scattered around the room, possibly containing drinks for the students to stay hydrated during their work. The overall atmosphere appears to be focused and studious, with everyone engaged in their tasks.\nimages/Class/Classroom/Class005/P002/003/17.jpg: The image features a man sitting at a desk with a laptop in front o",
+   "n_lines": 6813
+  },
+  {
+   "path": "output_annotation/test_descriptions.csv",
+   "bytes": 20,
+   "head": "image_path,caption\n",
+   "n_lines": 1
+  },
+  {
+   "path": "output_annotation/test_sampled.txt",
+   "bytes": 45138,
+   "head": "images/Class/Classroom/Class008/P001/006/15.jpg\nimages/Class/Classroom/Class005/P002/003/11.jpg\nimages/SelfStudy/Laboratory/P004/009/24.jpg\nimages/SelfStudy/Laboratory/P011/018/17.jpg\nimages/SelfStudy/Laboratory/P004/009/31.jpg\nimages/SelfStudy/Laboratory/P011/018/9.jpg\nimages/SelfStudy/Laboratory/P028/018/11.jpg\nimages/Class/Classroom/Class005/P001/007/6.jpg\nimages/Class/Classroom/Class008/P001/006/22.jpg\nimages/SelfStudy/Laboratory/P004/009/25.jpg\nimages/Class/Classroom/Class008/P006/014/31.jpg\nimages/Class/Classroom/Class009/P006/021/6.jpg\nimages/Class/Classroom/Class005/P001/007/19.jpg\nimages/Class/Classroom/Class009/P006/021/28.jpg\nimages/Class/Classroom/Class009/P006/021/1.jpg\nimages/Class/Classroom/Class005/P001/007/10.jpg\nimages/Class/Classroom/Class005/P001/007/7.jpg\nimages/SelfStudy/Laboratory/P011/018/25.jpg\nimages/Class/Classroom/Class005/P001/007/15.jpg\nimages/SelfStudy/Laboratory/P011/018/30.jpg\nimages/Class/Classroom/Class008/P006/014/22.jpg\nimages/Class/Classroom/Class008/P006/014/25.jpg\nimages/SelfStudy/Laboratory/P028/018/22.jpg\nimages/Class/Classroom/Class005/P001/007/18.jpg\nimages/SelfStudy/Laboratory/P011/018/28.jpg\nimages/Class/Classroom/Class009/P006/021/19.jpg\nimages/Class/Classroom/Class005/P002/003/8.jpg\nimages/SelfStudy/Laboratory/P011/018/1.jpg\nimages/SelfStudy/Laboratory/P028/018/15.jpg\nimages/Class/Classroom/Class008/P001/006/5.jpg\nimages/SelfStudy/Laboratory/P028/018/24.jpg\nimages/SelfStudy/Laboratory/P028/018/23.jpg\nimages/SelfStudy/Laboratory/P011/018/3.jpg\nimages/SelfStudy/Laboratory/P004/009/21.jpg\nimages/Class/Classroom/Class005/P001/007/24.jpg\nimages/Class/Classroom/Class008/P006/014/5.jpg\nimages/SelfStudy/Laboratory/P004/009/3.jpg\nimages/SelfStudy/Laboratory/P011/018/23.jpg\nimages/Class/Classroom/Class009/P006/021/14.jpg\nimages/Class/Classroom/Class008/P001/006/24.jpg\nimages/SelfStudy/Laboratory/P011/018/8.jpg\nimages/Class/Classroom/Class008/P006/014/21.jpg\nimages/Class/Classroom/Class009/P006/021/15.jpg\nimages/SelfStudy/Dormitory/P001/005/13.jpg\nimages/Class/Classroom/Class008/P006/014/17.jpg\nimages/SelfStudy/Laboratory/P004/009/11.jpg\nimages/SelfStudy/Laboratory/P004/009/2.jpg\nimages/Class/Classroom/Class009/P006/021/24.jpg\nimages/SelfStudy/Laboratory/P028/018/20.jpg\nimages/SelfStudy/Laboratory/P011/018/2.jpg\nimages/Class/Classroom/Class005/P001/007/21.jpg\nimages/Class/Classroom/Class008/P006/014/10.jpg\nimages/SelfStudy/Laboratory/P011/018/21.jpg\nimages/SelfStudy/Laboratory/P028/018/27.jpg\nimages/Class/Classroom/Class008/P001/006/11.jpg\nimages/Class/Classroom/Class008/P006/014/19.jpg\nimages/Class/Classroom/Class008/P001/006/31.jpg\nimages/SelfStudy/Dormitory/P001/005/1.jpg\nimages/Class/Classroom/Class005/P002/003/26.jpg\nimages/Class/Classroom/Class008/P006/014/16.jpg\nimages/Class/Classroom/Class005/P002/003/28.jpg\nimages/SelfStudy/Laboratory/P028/018/9.jpg\nimages/Class/Classroom/Class005/P001/007/23.jpg\nimages/SelfStudy/Dormitory/P001/005/15.jpg\nimages/SelfStudy/Laboratory/P011/018/29.jpg\nimages/Class/Classroom/Class005/P001/007/22.jpg\nimages/Class/Classroom/Class009/P006/021/13.jpg\nimages/SelfStudy/Dormitory/P001/005/19.jpg\nimages/SelfStudy/Laboratory/P028/018/6.jpg\nimages/Class/Classroom/Class008/P001/006/12.jpg\nimages/Class/Classroom/Class005/P002/003/29.jpg\nimages/SelfStudy/Dormitory/P001/005/8.jpg\nimages/Class/Classroom/Class008/P006/014/9.jpg\nimages/SelfStudy/Dormitory/P001/005/27.jpg\nimages/Class/Classroom/Class008/P006/014/27.jpg\nimages/Class/Classroom/Class005/P002/003/32.jpg\nimages/Class/Classroom/Class008/P001/006/6.jpg\nimages/SelfStudy/Dormitory/P001/005/28.jpg\nimages/Class/Classroom/Class008/P001/006/7.jpg\nimages/Class/Classroom/Class009/P006/021/4.jpg\nimages/Class/Classroom/Class008/P001/006/27.jpg\nimages/SelfStudy/Dormitory/P001/005/29.jpg\nimages/Class/Classroom/Class005/P002/003/13.jpg\nimages/SelfStudy/Laboratory/P004/009/4.jpg\nimages/Class/Classroom/Class009/P006/021/8.jpg\nimages/Class/Classroom/Class005/P001/007/27.jpg\nimages/Class/Classroom/Class005/P001/007/1.jpg\nimage",
+   "n_lines": 1000
+  },
+  {
+   "path": "output_annotation/train.txt",
+   "bytes": 4285676,
+   "head": "images/Class/Classroom/Class009/P001/032/8.jpg: The image features a young man wearing glasses and a black jacket, sitting in a classroom with a book in front of him. He is resting his chin on his hand, appearing to be focused on the book. There are two other people in the room, one on the left side and another on the right side.\n\nThe room is furnished with multiple chairs, one of which the man is sitting on, and another chair is located near the right side of the room. A laptop can be seen on a surface in the background, and a cell phone is placed on a surface closer to the right side of the room.\nimages/Class/Classroom/Class009/P001/032/9.jpg: The image features a young man wearing glasses and a black jacket, sitting in a classroom setting. He is holding a book in his hands and appears to be reading it. There are two other people in the room, one on the left side and another on the right side.\n\nThe room is furnished with multiple chairs, with one chair in the foreground and another chair in the background. A laptop is also visible on a surface in the room, possibly for studying or work purposes. The young man's posture suggests that he is focused on his reading, and his hand position on his chin adds to the impression of concentration.\nimages/Class/Classroom/Class009/P001/032/14.jpg: The image features a young man wearing glasses and a black jacket, sitting in a classroom with a book in front of him. He is resting his chin on his hand, appearing to be focused on the book. Another person is visible in the background, sitting at a desk with a laptop. The classroom setting includes multiple chairs and a dining table. The young man's posture and the presence of the book suggest that he is engaged in studying or reading.\nimages/Class/Classroom/Class009/P001/032/28.jpg: The image features a young man wearing glasses, sitting in a classroom with a book in front of him. He appears to be reading or studying, possibly during a break or after class. There are other people in the room, with one person sitting behind him and another person sitting further back.\n\nIn the room, there are two chairs, one near the man and another one in the background. A laptop is also present on a surface, possibly for the students to use during their studies. The man is wearing a jacket, which suggests that the room might be a bit chilly or that he is dressed for a colder environment.\nimages/Class/Classroom/Class009/P001/032/29.jpg: The image features a young man wearing glasses, sitting in a classroom with a book in front of him. He appears to be reading or studying, possibly for an exam. The classroom is filled with other students, some of whom are also wearing masks, indicating that they are taking precautions against the spread of germs.\n\nThere are several chairs in the room, with one close to the man and others scattered around the area. A laptop can be seen on a surface, possibly used for research or note-taking. The students are engaged in their studies, creating a focused and studious atmosphere.\nimages/Class/Classroom/Class009/P001/032/15.jpg: The image features a young man wearing glasses and a black jacket, sitting in a classroom with a book in front of him. He appears to be resting his chin on his hand, possibly taking a break or focusing on his studies. Another person is visible in the background, sitting at a desk with a laptop. The classroom setting includes multiple chairs and a dining table.\nimages/Class/Classroom/Class009/P001/032/17.jpg: The image features a young man wearing glasses and a mask, sitting in a classroom setting. He is holding a book in his hands and appears to be reading it. There are other people in the room, with one person sitting behind him and another person sitting to the right.\n\nThe classroom is equipped with a laptop on a surface in the background, and a cell phone can be seen placed nearby. The young man is the main focus of the scene, as he engages with the book and the mask he is wearing.\nimages/Class/Classroom/C",
+   "n_lines": 17763
+  },
+  {
+   "path": "output_annotation/train1.txt",
+   "bytes": 638050,
+   "head": "images/SelfStudy/Dormitory/P003/019/8.jpg: The image features a young man sitting at a desk, wearing a gray hoodie and headphones. He appears to be in a thoughtful or contemplative state, possibly studying or working on a task. The desk is cluttered with various items, including a book, a cell phone, and a cup. There are also two handbags placed on the desk, one near the left side and the other closer to the center. The man's posture suggests that he is focused on the task at hand, possibly listening to music or an audiobook while working.\nimages/SelfStudy/Dormitory/P003/019/9.jpg: The image features a young man sitting at a desk, wearing a gray hoodie and headphones. He appears to be in a state of confusion or deep thought, with his hand on his head. The desk is cluttered with various items, including a book, a cell phone, and a cup. There are also two bottles on the desk, one near the center and the other towards the right side. The scene suggests that the young man might be studying or working on a project, possibly in a dorm room or a similar setting.\nimages/SelfStudy/Dormitory/P003/019/14.jpg: The image features a young man sitting at a desk in a room, with his head in his hands. He is wearing a gray hoodie and appears to be in a state of deep thought or concentration. The desk is cluttered with various items, including a book, a cell phone, and a cup. There are also two bottles on the desk, one near the center and the other towards the right side. The room has a bed in the background, and a chair is positioned near the desk.\nimages/SelfStudy/Dormitory/P003/019/28.jpg: The image features a young man sitting at a desk, wearing a hooded sweatshirt and headphones. He appears to be in a thoughtful or contemplative state, possibly studying or working on a task. The desk is cluttered with various items, including a book, a cup, and a cell phone. There are also two bottles placed on the desk, one near the center and the other towards the right side. The man's posture suggests that he is focused on the task at hand, and his headphones indicate that he might be listening to music or an audiobook to help him concentrate.\nimages/SelfStudy/Dormitory/P003/019/29.jpg: The image features a young man sitting at a desk in a room, with his head in his hands. He is wearing a gray hoodie and appears to be in a state of deep thought or concentration. The room has a bed in the background, and there are several books scattered around the desk. A pair of scissors can also be seen on the desk, possibly indicating that the man was engaged in some sort of crafting or art project.\nimages/SelfStudy/Dormitory/P003/019/15.jpg: The image features a young man sitting at a desk, wearing a gray hoodie and headphones. He appears to be in a thoughtful or contemplative state, possibly deep in concentration or listening to music. The desk is cluttered with various items, including a book, a cell phone, and a cup. There are also two bottles on the desk, one near the center and the other towards the right side. The man's posture suggests that he is engaged in a task or activity, possibly studying or working on a project.\nimages/SelfStudy/Dormitory/P003/019/17.jpg: The image features a young man sitting at a desk in a room, with his head in his hands. He is wearing a gray hoodie and appears to be in a state of deep thought or concentration. The room has a bed in the background, and there are several books scattered around the desk. A pair of scissors can also be seen on the desk, possibly indicating that the man was engaged in some sort of crafting or art project.\nimages/SelfStudy/Dormitory/P003/019/16.jpg: The image features a young man sitting at a desk, wearing a gray hoodie and headphones. He appears to be in deep thought or concentrating on something, possibly studying or working on a project. The desk is cluttered with various items, including a book, a cup, and a cell phone. There are also two bottles on the desk, one near the center and the other towards ",
+   "n_lines": 2753
+  },
+  {
+   "path": "output_annotation/train_sampled.txt",
+   "bytes": 90480,
+   "head": "images/SelfStudy/Laboratory/P036/022/17.jpg\nimages/Class/Classroom/Class009/P009/033/29.jpg\nimages/Class/Classroom/Class008/P004/005/18.jpg\nimages/Class/Classroom/Class009/P006/002/30.jpg\nimages/Class/Classroom/Class008/P004/012/6.jpg\nimages/SelfStudy/Laboratory/P004/006/15.jpg\nimages/Class/Classroom/Class008/P004/005/3.jpg\nimages/Class/Classroom/Class009/P001/037/17.jpg\nimages/SelfStudy/Laboratory/P035/050/31.jpg\nimages/Class/Classroom/Class008/P004/005/13.jpg\nimages/SelfStudy/Library/P007/007/15.jpg\nimages/Class/Classroom/Class008/P004/012/8.jpg\nimages/Class/Classroom/Class009/P001/037/13.jpg\nimages/Class/Classroom/Class009/P005/008/30.jpg\nimages/SelfStudy/Laboratory/P024/010/5.jpg\nimages/Class/Classroom/Class003/P014/003/10.jpg\nimages/Class/Classroom/Class009/P001/037/10.jpg\nimages/SelfStudy/Laboratory/P016/017/20.jpg\nimages/Class/Classroom/Class003/P014/019/22.jpg\nimages/SelfStudy/Laboratory/P024/010/1.jpg\nimages/Class/Classroom/Class009/P010/001/3.jpg\nimages/Class/Classroom/Class003/P014/019/21.jpg\nimages/Class/Classroom/Class003/P014/019/20.jpg\nimages/Class/Classroom/Class003/P014/003/27.jpg\nimages/Class/Classroom/Class003/P010/013/12.jpg\nimages/SelfStudy/Laboratory/P016/006/3.jpg\nimages/SelfStudy/Laboratory/P040/006/32.jpg\nimages/SelfStudy/Laboratory/P016/017/2.jpg\nimages/SelfStudy/Library/P017/005/10.jpg\nimages/SelfStudy/Dormitory/P004/012/19.jpg\nimages/SelfStudy/Laboratory/P016/006/10.jpg\nimages/SelfStudy/Laboratory/P012/014/1.jpg\nimages/Class/Classroom/Class008/P003/006/32.jpg\nimages/SelfStudy/Laboratory/P012/015/3.jpg\nimages/Class/Classroom/Class003/P010/013/17.jpg\nimages/SelfStudy/Laboratory/P029/014/23.jpg\nimages/Class/Classroom/Class007/P007/006/7.jpg\nimages/SelfStudy/Library/P006/006/11.jpg\nimages/SelfStudy/Laboratory/P041/002/23.jpg\nimages/SelfStudy/Library/P007/015/19.jpg\nimages/SelfStudy/Laboratory/P029/014/8.jpg\nimages/Class/Classroom/Class009/P005/007/5.jpg\nimages/Class/Classroom/Class009/P006/016/6.jpg\nimages/SelfStudy/Laboratory/P012/015/24.jpg\nimages/Class/Classroom/Class009/P010/001/23.jpg\nimages/Class/Classroom/Class009/P005/008/14.jpg\nimages/SelfStudy/Library/P007/007/1.jpg\nimages/Class/Classroom/Class009/P009/033/17.jpg\nimages/Class/Classroom/Class008/P003/010/14.jpg\nimages/SelfStudy/Library/P002/003/1.jpg\nimages/SelfStudy/Library/P006/006/6.jpg\nimages/SelfStudy/Laboratory/P012/015/27.jpg\nimages/Class/Classroom/Class008/P003/010/10.jpg\nimages/SelfStudy/Laboratory/P029/014/11.jpg\nimages/Class/Classroom/Class009/P006/016/4.jpg\nimages/Class/Classroom/Class009/P010/001/27.jpg\nimages/SelfStudy/Classroom/P006/001/22.jpg\nimages/Class/Classroom/Class008/P003/005/22.jpg\nimages/Class/Classroom/Class008/P003/005/20.jpg\nimages/SelfStudy/Laboratory/P041/002/4.jpg\nimages/Class/Classroom/Class008/P003/010/24.jpg\nimages/SelfStudy/Library/P007/007/14.jpg\nimages/SelfStudy/Dormitory/P004/012/26.jpg\nimages/SelfStudy/Laboratory/P004/006/1.jpg\nimages/Class/Classroom/Class009/P006/016/16.jpg\nimages/Class/Classroom/Class007/P004/002/22.jpg\nimages/SelfStudy/Laboratory/P024/010/25.jpg\nimages/Class/Classroom/Class009/P009/033/24.jpg\nimages/Class/Classroom/Class003/P014/003/1.jpg\nimages/Class/Classroom/Class008/P003/012/1.jpg\nimages/Class/Classroom/Class009/P001/037/14.jpg\nimages/Class/Classroom/Class007/P005/009/17.jpg\nimages/SelfStudy/Laboratory/P016/006/23.jpg\nimages/Class/Classroom/Class003/P014/012/19.jpg\nimages/SelfStudy/Laboratory/P016/017/7.jpg\nimages/Class/Classroom/Class008/P004/005/8.jpg\nimages/Class/Classroom/Class008/P008/010/2.jpg\nimages/Class/Classroom/Class007/P005/009/13.jpg\nimages/Class/Classroom/Class003/P014/003/2.jpg\nimages/SelfStudy/Laboratory/P035/050/10.jpg\nimages/SelfStudy/Laboratory/P024/010/3.jpg\nimages/Class/Classroom/Class008/P003/005/25.jpg\nimages/Class/Classroom/Class007/P007/006/23.jpg\nimages/Class/Classroom/Class008/P003/010/16.jpg\nimages/Class/Classroom/Class009/P009/033/19.jpg\nimages/SelfStudy/Laboratory/P036/022/10.jpg\nimages/SelfStudy/Laboratory/P036/022/27.jpg\nimages/Class/Classroom/Class00",
+   "n_lines": 2000
+  }
+ ],
+ "clips": {
+  "n_clips": 2669,
+  "paper_n_clips": 2649,
+  "delta_vs_paper": 20,
+  "with_video": 2669,
+  "with_frames": 2669,
+  "with_features": 2640,
+  "frames_per_clip": {
+   "min": 30,
+   "median": 31,
+   "max": 59,
+   "total": 82488
+  },
+  "unparsed_files": 0,
+  "unparsed_examples": []
+ },
+ "identity": {
+  "n_distinct_person_ids": 43,
+  "n_distinct_identity_keys": 141,
+  "paper_n_subjects": 136,
+  "person_ids_spanning_scopes": 25,
+  "examples_spanning_scopes": {
+   "002": [
+    "Class/Classroom/Class001/P002",
+    "Class/Classroom/Class002/P002",
+    "Class/Classroom/Class003/P002",
+    "Class/Classroom/Class004/P002",
+    "Class/Classroom/Class005/P002",
+    "Class/Classroom/Class006/P002",
+    "Class/Classroom/Class007/P002",
+    "Class/Classroom/Class008/P002",
+    "Class/Classroom/Class009/P002",
+    "SelfStudy/Classroom/P002",
+    "SelfStudy/Dormitory/P002",
+    "SelfStudy/Laboratory/P002",
+    "SelfStudy/Library/P002"
+   ],
+   "006": [
+    "Class/Classroom/Class001/P006",
+    "Class/Classroom/Class003/P006",
+    "Class/Classroom/Class007/P006",
+    "Class/Classroom/Class008/P006",
+    "Class/Classroom/Class009/P006",
+    "SelfStudy/Classroom/P006",
+    "SelfStudy/Dormitory/P006",
+    "SelfStudy/Laboratory/P006",
+    "SelfStudy/Library/P006"
+   ],
+   "005": [
+    "Class/Classroom/Class001/P005",
+    "Class/Classroom/Class003/P005",
+    "Class/Classroom/Class007/P005",
+    "Class/Classroom/Class008/P005",
+    "Class/Classroom/Class009/P005",
+    "SelfStudy/Classroom/P005",
+    "SelfStudy/Dormitory/P005",
+    "SelfStudy/Laboratory/P005",
+    "SelfStudy/Library/P005"
+   ],
+   "001": [
+    "Class/Classroom/Class001/P001",
+    "Class/Classroom/Class002/P001",
+    "Class/Classroom/Class003/P001",
+    "Class/Classroom/Class004/P001",
+    "Class/Classroom/Class005/P001",
+    "Class/Classroom/Class006/P001",
+    "Class/Classroom/Class007/P001",
+    "Class/Classroom/Class008/P001",
+    "Class/Classroom/Class009/P001",
+    "SelfStudy/Classroom/P001",
+    "SelfStudy/Dormitory/P001",
+    "SelfStudy/Laboratory/P001",
+    "SelfStudy/Library/P001"
+   ],
+   "011": [
+    "Class/Classroom/Class003/P011",
+    "SelfStudy/Laboratory/P011",
+    "SelfStudy/Library/P011"
+   ]
+  },
+  "verdict": "SESSION-LOCAL \u2014 25 person ids appear under more than one session/location, so P### is an index within a recording, not a global subject id. Split on identity_key, never on person.",
+  "safe_split_key": "identity_key"
+ },
+ "distribution": {
+  "status": "MATCHES the published distribution",
+  "n_labeled": 2649,
+  "max_delta_pp": 0.004299735749338396,
+  "rows": [
+   {
+    "class": "neutrality",
+    "n": 1728,
+    "pct": 65.2321630804077,
+    "paper_pct": 65.23,
+    "delta_pp": 0.0021630804076977483
+   },
+   {
+    "class": "distraction",
+    "n": 527,
+    "pct": 19.89429973574934,
+    "paper_pct": 19.89,
+    "delta_pp": 0.004299735749338396
+   },
+   {
+    "class": "fatigue",
+    "n": 196,
+    "pct": 7.399018497546244,
+    "paper_pct": 7.4,
+    "delta_pp": -0.0009815024537562778
+   },
+   {
+    "class": "enjoyment",
+    "n": 161,
+    "pct": 6.0777651944129865,
+    "paper_pct": 6.08,
+    "delta_pp": -0.0022348055870136108
+   },
+   {
+    "class": "confusion",
+    "n": 37,
+    "pct": 1.3967534918837297,
+    "paper_pct": 1.4,
+    "delta_pp": -0.0032465081162702525
+   }
+  ]
+ },
+ "splits": {
+  "status": "found: test=528, train=2121",
+  "clip_overlaps": {
+   "test&train": 0
+  },
+  "identity_overlaps": {
+   "test&train": 132
+  },
+  "identity_overlap_pct": {
+   "test&train": 93.6
+  },
+  "verdict": "LEAKY \u2014 the shipped split has zero clip overlap but shares subjects: test&train 132 (93.6% of identities appear on both sides). A model can memorise a face in training and be scored on it at test. Numbers from this split are not comparable to a subject-disjoint benchmark \u2014 build our own."
+ },
+ "leakage": {
+  "n_clips": 2669,
+  "n_identities": 141,
+  "clips_per_identity": 18.9,
+  "avg_identities_straddling": 134.3,
+  "avg_test_clips_with_seen_subject": 533.8,
+  "pct_test_contaminated": 100.0,
+  "verdict": "A random clip-level split contaminates 100.0% of the test set with subjects seen in training. Split on identity, not on clips."
+ }
+}

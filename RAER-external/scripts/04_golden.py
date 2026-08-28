@@ -21,6 +21,10 @@ def main():
     ap.add_argument("--labeling", default="./labeling")
     ap.add_argument("--config", default="config.yaml")
     ap.add_argument("--n", type=int, default=None)
+    ap.add_argument("--no-blind", action="store_true",
+                    help="show RAER's label alongside the cues (anchors the reviewer)")
+    ap.add_argument("--keep-unlabelled", action="store_true",
+                    help="include clips with no RAER label (they are unanswerable)")
     ap.add_argument("--seed-golden", default=None,
                     help="an earlier golden.json (e.g. the pilot) whose reviewed "
                          "clips are force-included so that work is not redone")
@@ -42,7 +46,9 @@ def main():
                  hard_frac=g.get("hard_frac", 0.2),
                  stratify_by=g.get("stratify_by", "raer_label"),
                  seed=cfg.get("raer", {}).get("seed", 13),
-                 seed_golden=Path(args.seed_golden) if args.seed_golden else None)
+                 seed_golden=Path(args.seed_golden) if args.seed_golden else None,
+                 blind=not args.no_blind,
+                 require_label=not args.keep_unlabelled)
     print(f"[04] open {Path(args.labeling)/'index.html'} to review")
 
 
