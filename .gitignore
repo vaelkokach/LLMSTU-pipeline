@@ -1,0 +1,13 @@
+work/
+*.pyc
+__pycache__/
+.ipynb_checkpoints/
+
+# RAER media must never be committed — see DATA_PROVENANCE.md
+*.mp4
+*.jpg
+*.jpeg
+*.png
+*.pt
+data/
+raer_data/
