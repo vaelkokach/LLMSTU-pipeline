@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 """Stage 05 — RAER label vs our cue labels vs human adjudication.
 
-  python scripts/05_compare.py --llmstu ../LLMSTU-pipeline --golden labeling/golden.json
+  python scripts/05_compare.py --llmstu .. --golden labeling/golden.json
 """
 import argparse
 import sys
@@ -12,7 +12,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--llmstu", default="../LLMSTU-pipeline")
+    ap.add_argument("--llmstu", default="..")
     ap.add_argument("--out", default="./work")
     ap.add_argument("--golden", default="labeling/golden.json")
     ap.add_argument("--config", default="config.yaml")

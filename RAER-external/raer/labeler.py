@@ -40,13 +40,19 @@ def _effective(caption_block: Dict[str, Any]) -> Dict[str, Any]:
     """
     try:
         from llmstu.config import CaptionConfig
-        cc = CaptionConfig()
-        for k, v in (caption_block or {}).items():
-            if hasattr(cc, k):
-                setattr(cc, k, v)
-        return {k: getattr(cc, k) for k in LOCKED_FIELDS}
-    except Exception:
-        return {k: (caption_block or {}).get(k) for k in LOCKED_FIELDS}
+    except ImportError as e:
+        # Degrading to a raw-dict comparison here would report every field the
+        # yaml omits as a difference — a spurious "configs differ" that sends you
+        # hunting a problem that does not exist. Fail on the real cause instead.
+        raise SystemExit(
+            f"cannot import llmstu ({e}). The drift check compares effective config "
+            f"values, so it needs the package. Put the LLMSTU-pipeline root on "
+            f"sys.path (the scripts do this via --llmstu, default '..').") from e
+    cc = CaptionConfig()
+    for k, v in (caption_block or {}).items():
+        if hasattr(cc, k):
+            setattr(cc, k, v)
+    return {k: getattr(cc, k) for k in LOCKED_FIELDS}
 
 
 def assert_identical(our_cfg: Dict[str, Any], llmstu_config_path: Path) -> Dict[str, Any]:

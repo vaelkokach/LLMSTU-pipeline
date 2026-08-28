@@ -17,6 +17,19 @@ local machine. The same `llmstu/` package backs the notebook and the CLI scripts
 
 ---
 
+## Related: the RAER external task
+
+[`RAER-external/`](RAER-external/) applies **this same labeler** to RAER, a third-party
+academic-emotion dataset, as a separate external task — deliberately *not* mapped onto
+the LLMSTU cue taxonomy. It lives in this repo so the labeler and the code calling it are
+always the same revision: it imports `llmstu.caption`, `llmstu.schema`, `llmstu.prompts`
+and `llmstu.sampling` rather than copying them, and aborts if its `caption:` config
+drifts from the one locked here.
+
+Read [`RAER-external/DATA_PROVENANCE.md`](RAER-external/DATA_PROVENANCE.md) before
+touching that data — it is licence-gated, and **no RAER media or derivative may be
+published**, so the upload stage is disabled there.
+
 ## Quickest path — Colab
 
 Open `notebooks/LLMSTU_pipeline_colab.ipynb` in Colab (GPU runtime), set your HF

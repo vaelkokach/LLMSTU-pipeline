@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 """Stage 03 — frame cue labels -> one verdict per clip.
 
-  python scripts/03_aggregate.py --llmstu ../LLMSTU-pipeline --out ./work
+  python scripts/03_aggregate.py --llmstu .. --out ./work
 """
 import argparse
 import json
@@ -13,7 +13,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--llmstu", default="../LLMSTU-pipeline")
+    ap.add_argument("--llmstu", default="..")
     ap.add_argument("--out", default="./work")
     ap.add_argument("--config", default="config.yaml")
     ap.add_argument("--min-frames", type=int, default=1)

@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 """Stage 04 — build the three-way human-review payload.
 
-  python scripts/04_golden.py --llmstu ../LLMSTU-pipeline --out ./work
+  python scripts/04_golden.py --llmstu .. --out ./work
 
 Writes labeling/data.json. Open labeling/index.html (double-click works; the
 payload is self-contained), review, then Export golden.json for stage 05.
@@ -16,7 +16,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--llmstu", default="../LLMSTU-pipeline")
+    ap.add_argument("--llmstu", default="..")
     ap.add_argument("--out", default="./work")
     ap.add_argument("--labeling", default="./labeling")
     ap.add_argument("--config", default="config.yaml")

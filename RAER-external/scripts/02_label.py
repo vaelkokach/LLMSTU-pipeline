@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 """Stage 02 — pseudo-label the sampled frames with the LLMSTU labeler.
 
-  python scripts/02_label.py --llmstu ../LLMSTU-pipeline --out ./work
+  python scripts/02_label.py --llmstu .. --out ./work
 
 Refuses to run if this repo's caption settings have drifted from the ones locked
 in LLMSTU-pipeline/config.yaml. Resumable: re-running continues where it stopped.
@@ -15,7 +15,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--llmstu", default="../LLMSTU-pipeline",
+    ap.add_argument("--llmstu", default="..",
                     help="LLMSTU-pipeline checkout — the labeler comes from here")
     ap.add_argument("--out", default="./work")
     ap.add_argument("--config", default="config.yaml")

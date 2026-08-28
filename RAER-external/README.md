@@ -74,19 +74,19 @@ python scripts/01_frames.py --root /content/raer/RAER --out ./work
 ```
 
 ```bash
-python scripts/02_label.py --llmstu ../LLMSTU-pipeline --out ./work --limit 96
+python scripts/02_label.py --llmstu .. --out ./work --limit 96
 ```
 
 ```bash
-python scripts/03_aggregate.py --llmstu ../LLMSTU-pipeline --out ./work
+python scripts/03_aggregate.py --llmstu .. --out ./work
 ```
 
 ```bash
-python scripts/04_golden.py --llmstu ../LLMSTU-pipeline --out ./work
+python scripts/04_golden.py --llmstu .. --out ./work
 ```
 
 ```bash
-python scripts/05_compare.py --llmstu ../LLMSTU-pipeline --golden labeling/golden.json
+python scripts/05_compare.py --llmstu .. --golden labeling/golden.json
 ```
 
 ### What the audit will not do
