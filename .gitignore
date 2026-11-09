@@ -1,4 +1,6 @@
 work/
+# Local run records and generated outputs are not part of the source repo.
+/Record runs/
 *.pt
 __pycache__/
 *.pyc
